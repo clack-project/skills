@@ -1,0 +1,17 @@
+{
+  "name": "clack",
+  "owner": {
+    "name": "CLACK Inc."
+  },
+  "metadata": {
+    "description": "클랙 공식 에이전트 스킬",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "clack",
+      "source": "./",
+      "description": "클랙 계정의 상품·콘텐츠·프로필과 MCP를 사용하는 스킬"
+    }
+  ]
+}

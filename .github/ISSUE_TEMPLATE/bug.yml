@@ -1,0 +1,26 @@
+name: 버그 신고
+description: CLACK 스킬의 명령·절차·설치 문제를 알려 주세요.
+body:
+  - type: markdown
+    attributes:
+      value: "토큰, 연락처, 주소, 계정 식별자 등 개인정보를 제거해 주세요."
+  - type: input
+    id: versions
+    attributes:
+      label: 환경과 버전
+      description: 운영체제, 에이전트, 스킬 버전, CLACK CLI 버전
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 재현 단계와 기대 결과
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 실제 결과와 오류 코드
+      description: 민감 정보를 제거한 오류 메시지만 작성해 주세요.
+    validations:
+      required: true

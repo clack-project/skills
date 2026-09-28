@@ -1,0 +1,14 @@
+name: 기능 제안
+description: CLACK 스킬이 지원했으면 하는 작업을 알려 주세요.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 해결하고 싶은 작업
+      description: 현재의 어려움과 원하는 결과를 적어 주세요.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 제안하는 사용 흐름

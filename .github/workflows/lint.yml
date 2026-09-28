@@ -1,0 +1,24 @@
+name: 스킬 검증
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm test
+      - name: skills 탐색 확인
+        env:
+          DISABLE_TELEMETRY: '1'
+        run: npx --yes skills@1.7.0 add . --list
