@@ -1,5 +1,19 @@
 # 변경 이력
 
+## 0.2.2 — 2026-09-28
+
+- 공개 도그푸딩(S7b)에서 발견된 결함을 반영했습니다. 요구 CLI 버전을 `@clack-platform/cli` 0.1.1 이상으로 올렸습니다(`clack-mcp` 제외). 0.1.0 사용자는 `npm i -g @clack-platform/cli@latest`로 올리도록 안내합니다.
+- `clack-setup`에 '로그인 승인 대기' 절차를 추가했습니다. 승인 코드를 보여준 뒤 승인 완료나 만료까지 같은 턴에서 기다리고(명령 제한 시간 10분 이상, 백그라운드 실행이면 완료 알림 뒤 턴 종료), 턴을 끝내야 하는 호스트는 `clack login --no-wait`로 코드만 받은 뒤 다음 턴에 `clack login --resume`으로 이어받습니다. 이어받을 수 없으면 앱 연결 목록 확인을 요구하지 않고 새 코드를 바로 발급합니다. 로그인을 안내하는 다른 스킬도 이 절차를 따르도록 연결했습니다.
+- 로그인 출력은 호스트의 백그라운드 실행·출력 확인 기능으로 보고, 승인 코드가 남지 않도록 작업 폴더 밖 임의 파일로 리다이렉트하지 않게 했습니다. 로그인 예시에 `--no-qr`를 붙였습니다.
+- `clack-creator-content`에 명령별 필요 권한 표를 넣었습니다(`submit`은 `creator-content:write`와 `creator-content:publish` 모두). CLI에 없는 명령(`game-declaration`)을 표에서 뺐습니다.
+- 10종 스킬의 권한 표기를 서버 허용 목록과 전수 대조했습니다. `clack-skill-package`의 `deprecate`를 `skill:publish`로 바로잡고, CLI의 `submit`·`release`가 실행 전 상태 조회로 `skill:read`도 쓴다는 점을 적었습니다. `clack-setup` 권한 표를 명령 단위로 정밀화하고, `clack-mcp` 권한 표에 크리에이터·페이지·플랫폼 스킬·공유 문서 도구 행을 추가했습니다.
+- `clack-creator-content`의 작품 제출 순서를 upload → preview → 같은 계정 앱에서 확인 완료 → submit으로 명시하고 `PREVIEW_CONFIRMATION_REQUIRED`와 기능 비활성 오류 대응을 오류 표에 추가했습니다. "앱 확인·AI 심사 후 공개는 준비 중" 문구는 `clack content config`의 기능 플래그(`uploads_enabled`·`app_preview_enabled`·`review_enabled`·`publication_enabled`)로 확인하도록 바꿨습니다.
+- 게시 여부는 `content status`의 `status`·`current_version_id`로 확인하고, CLI가 출력하지 않는 공개 링크를 추측해 안내하지 않도록 했습니다.
+- `clack-page`의 자동 승인 조건에 허용 CSS 함수 목록과 @-규칙 제한을 넣고, 안전 영역은 `env(safe-area-inset-*)` 대신 `var(--clack-safe-*)`를 쓰도록 명시했습니다(`env()`는 관리자 검토).
+- `clack-setup`의 승인 기준에 조건부·복합 지시도 대상과 효과를 아직 보여주지 않았다면 1회 확인한다는 규칙을 추가했습니다. 답변에 스킬 지침 문구·스킬 파일 경로를 인용하지 않고, 확인하지 않은 상태("승인 완료" 등)를 쓰지 않도록 했습니다.
+- 크리에이터 스킬(`clack-creator-content`·`clack-page`·`clack-skill-package`·`clack-platform-data`) 상단에 테스트 앱 사용자는 먼저 `clack config set env dev`를 실행한다는 안내를 통일하고, 남아 있던 `--env dev` 반복을 정리했습니다.
+- 회귀 도그푸딩(S7c) 반영: 기다리지 않고 턴을 끝낼 때는 기본 `login`을 백그라운드에 남기지 않고 `--no-wait`를 쓰며 "완료되면 알려 드리겠다"고 약속하지 않도록 했습니다. `clack-creator-content`의 공개·게시중단 절 첫머리에 사용자 확인 전 실행 금지를 두었습니다. `clack-skill-package`에 지원 종료 후에는 새 버전을 올릴 수 없고 같은 스킬 이름도 다시 쓸 수 없다는 점을 적었습니다.
+
 ## 0.2.1 — 2026-09-28
 
 - 공개 도그푸딩(S7a)에서 발견된 결함을 반영했습니다.

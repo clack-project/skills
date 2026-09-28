@@ -14,7 +14,7 @@
 ## HTML을 직접 작성·수정할 때
 
 - 배경·대표 이미지는 화면 가장자리까지 채우고, 제목·링크·입력 같은 상호작용 요소에만 안전 영역과 닫기 버튼을 피할 여백을 둔다. `body`·`main` 전체에 헤더 높이만큼 빈 공간을 만들면 전체 화면의 이점이 사라진다.
-- 앱이 제공하는 CSS 변수: 안전 영역 `--clack-safe-top/bottom/left/right`, 화면 높이 `--clack-viewport-height`. `--clack-header-height`는 기존 호환용으로 고정 헤더에서는 0이다(닫기 버튼 모드의 배경 전체를 밀어내는 용도로 쓰지 않는다).
+- 앱이 제공하는 CSS 변수: 안전 영역 `--clack-safe-top/bottom/left/right`, 화면 높이 `--clack-viewport-height`. `--clack-header-height`는 기존 호환용으로 고정 헤더에서는 0이다(닫기 버튼 모드의 배경 전체를 밀어내는 용도로 쓰지 않는다). 안전 영역은 웹 표준 `env(safe-area-inset-*)` 대신 `var(--clack-safe-top)` 등을 쓴다. `env()`는 아래 자동 승인 대상 CSS 함수 목록에 없어 자동 승인에서 제외되고(`CSS_FUNCTION_REQUIRES_REVIEW`) 관리자 검토로 넘어간다. `var()`의 대체값에도 `env()`를 넣지 않는다.
 
 ```css
 html, body { margin: 0; }
@@ -49,5 +49,7 @@ window.ReactNativeWebView?.postMessage(JSON.stringify({ type: 'clack.page.close'
 - 새로 판정해야 할 이미지가 8장 이하다(이미 심사를 통과한 이미지는 다시 포함하지 않는다).
 - HTML·CSS 텍스트 합계 100 KiB 이하다.
 - 개인 홈은 전체 이용가, 세계관은 그 세계관의 등급 상한 이내다.
+- CSS 함수는 다음만 자동 승인 대상이다: 색상(`rgb`·`rgba`·`hsl`·`hsla`·`hwb`·`lab`·`lch`·`oklab`·`oklch`·`color`·`color-mix`), 크기·값 계산(`calc`·`min`·`max`·`clamp`·`var`·`repeat`·`minmax`·`fit-content`), 그라디언트(`linear-gradient`·`radial-gradient`·`repeating-linear-gradient`·`repeating-radial-gradient`), 2D 변형(`translate`·`translatex`·`translatey`·`scale`·`rotate`). 그 밖의 함수(웹 표준 `env()` 포함)는 목록에 없다는 이유만으로 관리자 검토로 넘어간다.
+- @-규칙은 `@media`·`@supports`·`@layer`·`@container`만 자동 승인 대상이다(`@keyframes`·`@font-face`·`@import` 등은 관리자 검토).
 
-스크립트·인라인 이벤트·CSS 애니메이션이나 `url()` 배경·`srcset`/`<picture>`·`data:`나 원격 이미지 참조·`<video>`/`<audio>`·`#`이 아닌 외부 링크가 있으면 자동 승인 대상에서 빠지고 관리자 검토로 넘어간다.
+스크립트·인라인 이벤트·CSS 애니메이션·전환(`animation`·`transition`)·CSS 이스케이프(`\`)나 `url()` 배경·`srcset`/`<picture>`·`data:`나 원격 이미지 참조·`<video>`/`<audio>`·`#`이 아닌 외부 링크가 있으면 자동 승인 대상에서 빠지고 관리자 검토로 넘어간다.

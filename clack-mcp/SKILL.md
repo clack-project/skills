@@ -52,6 +52,7 @@ bearer_token_env_var = "CLACK_TOKEN"
 | `product:read` / `product:write` | 상품 조회·검색 / 등록·수정·상태·삭제 |
 | `content:read` / `content:write` | 글·댓글·채널 조회 / 글·댓글·채널 포스트·시리즈 변경 |
 | `product:write` 또는 `content:write` | 이미지 업로드 요청·완료 |
+| `creator-content:*`, `custom-page:*`, `skill:*`, `platform:*` | 크리에이터 작품·페이지·플랫폼 스킬·공유 문서 도구. 필요한 권한 조합(심사 제출은 write와 publish 모두)과 앱 확인·사용자 확인 규칙은 각각 `clack-creator-content`·`clack-page`·`clack-skill-package`·`clack-platform-data`를 따른다. 원격 MCP는 로컬 파일을 읽지 못하므로 파일 전송은 CLI를 쓴다 |
 
 `write`가 `read`를 포함하지 않는다. 도구가 없다고 이름을 추측해 권한 밖 호출을 시도하지 않는다. 현재 MCP에는 채널 자체 생성·수정, 시리즈 삭제, 게시글 상품 연결, 비밀번호·이메일 인증 도구가 없다. 필요한 경우 사용자의 터미널 CLI나 앱으로 이어간다.
 

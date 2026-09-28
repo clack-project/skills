@@ -5,9 +5,9 @@ description: 클랙 게시판·피드 글 작성과 수정·삭제, 댓글·답�
 
 # 클랙 게시글과 댓글
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. 조회는 `content:read`, 쓰기는 `content:write`다. CLI의 게시글 생성·수정은 게시판 조회도 하므로 두 scope가 필요하다. 상품 연결 전 상품을 조회하려면 `product:read`도 필요하다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 조회는 `content:read`, 쓰기는 `content:write`다. CLI의 게시글 생성·수정은 게시판 조회도 하므로 두 scope가 필요하다. 상품 연결 전 상품을 조회하려면 `product:read`도 필요하다.
 
-CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`로 실행한다. `clack --version`, `clack doctor --json`으로 계정·권한·기능·한도를 확인한다. 필요한 경우 `clack login --scopes content:read,content:write --no-browser`로 연결하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 수동 토큰은 `clack login --token`의 숨김 입력 또는 안전한 `CLACK_TOKEN` 주입으로 전달한다.
+CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`로 실행한다. `clack --version`, `clack doctor --json`으로 계정·권한·기능·한도를 확인한다. 필요한 경우 `clack login --scopes content:read,content:write --no-browser --no-qr`로 연결하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다. 수동 토큰은 `clack login --token`의 숨김 입력 또는 안전한 `CLACK_TOKEN` 주입으로 전달한다.
 
 ## 게시판 확인과 작성
 

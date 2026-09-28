@@ -5,21 +5,22 @@ description: 클랙 콘텐츠 서버 키로 사용량·이용자 데이터를 �
 
 # 클랙 플랫폼 서버 키·데이터·공유 문서
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. 이 스킬은 **서로 다른 두 인증 평면**을 다룬다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 이 스킬은 **서로 다른 두 인증 평면**을 다룬다.
+
+테스트 앱(스테이징) 사용자라면 먼저 `clack config set env dev`를 한 번 실행한다. 이후 모든 `clack platform ...`·`clack content ...`·`clack mcp config` 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙이지 않는다.
 
 | 평면 | 자격 | 용도 | 발급 |
 |---|---|---|---|
 | 서버 키 | `CLACK_SERVER_KEY`(`csk_...`) | 내 콘텐츠(게임·앱)의 사용량 조회, 이용자 데이터 문서 조회·쓰기(`data:read`/`data:write`) | **크리에이터 센터 로그인 세션 전용**, CLI는 발급·회전하지 않는다 |
 | 개인 액세스 토큰(PAT) | `CLACK_TOKEN`(`pat_...`, `platform:read`/`platform:write`) | 내 콘텐츠의 서버 키 목록 조회·폐기, 이용자가 쓴 공유 문서 조회·숨김·삭제 | `clack login`(앱 승인) |
 
-둘은 서로 다른 인증 평면이며 섞어 쓸 수 없다. PAT가 필요하면 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다.
+둘은 서로 다른 인증 평면이며 섞어 쓸 수 없다. PAT가 필요하면 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다.
 
 ```sh
-clack config set env dev
-clack login --scopes platform --no-browser
+clack login --scopes platform --no-browser --no-qr
 ```
 
-`config set env dev`를 한 번 실행해 두면 이후 모든 `clack platform ...`·`clack content ...` 명령이 이 환경을 그대로 따르므로 매 명령에 `--env dev`를 붙일 필요가 없다.
+`--scopes platform`은 `platform:read`와 `platform:write`를 함께 요청한다. 조회만 할 작업이면 `platform:read`만 요청한다.
 
 ## 서버 키로 사용량·데이터 조회
 
@@ -64,8 +65,8 @@ clack content shared delete <콘텐츠-UUID> ranking entry-1 --yes --json
 ## 로컬 stdio MCP
 
 ```sh
-clack mcp config --platform --env dev --json
-clack mcp config --platform --codex --env dev
+clack mcp config --platform --json
+clack mcp config --platform --codex
 ```
 
 `clack mcp config --platform`은 로그인·네트워크 요청 없이 `mcp serve-platform`을 실행하는 로컬 설정을 출력한다. 에이전트 실행 환경에 서버 키 도구용 `CLACK_SERVER_KEY`, PAT 도구용 `CLACK_TOKEN`을 필요한 만큼만 설정한다. 설정 출력에는 키·토큰 원문이 들어가지 않는다.

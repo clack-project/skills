@@ -106,4 +106,4 @@ clack login
 clack doctor --json
 ```
 
-Node.js 20 이상, CLI 0.1.0 이상이 필요합니다. 앱에서 표시된 연결 요청의 권한·만료를 확인하고 승인하세요. 토큰을 명령행 인자나 대화에 복사하지 마세요. CLI를 설치할 수 없는 클라이언트는 [clack-mcp](clack-mcp/SKILL.md)를 참조하세요. 테스트(스테이징) 앱 계정이면 먼저 `clack config set env dev`를 실행한 뒤 `clack login`으로 연결하세요. 이후 모든 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙일 필요가 없습니다. 운영에서 API 접근이 비활성화되어 있으면 스킬 설치만으로 접근이 허용되지 않습니다.
+Node.js 20 이상, CLI 0.1.1 이상이 필요합니다. 이미 0.1.0을 설치했다면 `npm i -g @clack-platform/cli@latest`로 올리세요. 앱에서 표시된 연결 요청의 권한·만료를 확인하고 승인하세요. 토큰을 명령행 인자나 대화에 복사하지 마세요. CLI를 설치할 수 없는 클라이언트는 [clack-mcp](clack-mcp/SKILL.md)를 참조하세요. 테스트(스테이징) 앱 계정이면 먼저 `clack config set env dev`를 실행한 뒤 `clack login`으로 연결하세요. 이후 모든 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙일 필요가 없습니다. 운영에서 API 접근이 비활성화되어 있으면 스킬 설치만으로 접근이 허용되지 않습니다.

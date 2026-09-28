@@ -5,15 +5,15 @@ description: 클랙 상품 조회·등록·일괄 등록·가격 수정·판매 
 
 # 클랙 상품 관리
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. 조회는 `product:read`, 변경은 `product:write`가 필요하다. 설치가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. 패키지·기능이 공개되지 않은 상태는 우회하지 않는다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 조회는 `product:read`, 변경은 `product:write`가 필요하다. 설치가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. 패키지·기능이 공개되지 않은 상태는 우회하지 않는다.
 
 ```sh
 clack --version
 clack doctor --json
-clack login --scopes product:read,product:write --no-browser
+clack login --scopes product:read,product:write --no-browser --no-qr
 ```
 
-로그인은 필요한 경우만 실행한다. 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 수동 토큰은 `clack login --token`의 숨김 입력이나 안전하게 주입한 `CLACK_TOKEN`으로 전달한다. 토큰을 대화·명령 인자·로그에 남기지 않는다.
+로그인은 필요한 경우만 실행한다. 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다. 수동 토큰은 `clack login --token`의 숨김 입력이나 안전하게 주입한 `CLACK_TOKEN`으로 전달한다. 토큰을 대화·명령 인자·로그에 남기지 않는다.
 
 ## 조회와 입력 준비
 

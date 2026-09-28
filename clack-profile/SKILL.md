@@ -5,9 +5,9 @@ description: 클랙 내 프로필·판매자 소개·배송지·알림·선호 �
 
 # 클랙 프로필과 배송지
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. 조회는 `profile:read`, 변경은 `profile:write`다. 새 아바타 파일의 업로드에는 별도로 `product:write` 또는 `content:write`가 필요하다. 프로필 수정만 하려고 관련 없는 쓰기 권한을 자동 요청하지 말고 기존 클랙 CDN 이미지나 앱 변경을 사용할 수 있다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 조회는 `profile:read`, 변경은 `profile:write`다. 새 아바타 파일의 업로드에는 별도로 `product:write` 또는 `content:write`가 필요하다. 프로필 수정만 하려고 관련 없는 쓰기 권한을 자동 요청하지 말고 기존 클랙 CDN 이미지나 앱 변경을 사용할 수 있다.
 
-CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. `clack --version`, `clack doctor --json`으로 계정·권한·기능·한도를 확인한다. 필요할 때만 `clack login --scopes profile:read,profile:write --no-browser`를 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 수동 토큰은 `clack login --token`의 숨김 입력이나 안전한 `CLACK_TOKEN` 주입으로 전달한다.
+CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. `clack --version`, `clack doctor --json`으로 계정·권한·기능·한도를 확인한다. 필요할 때만 `clack login --scopes profile:read,profile:write --no-browser --no-qr`를 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다. 수동 토큰은 `clack login --token`의 숨김 입력이나 안전한 `CLACK_TOKEN` 주입으로 전달한다.
 
 ## 프로필·소개·알림
 

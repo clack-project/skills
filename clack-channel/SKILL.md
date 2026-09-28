@@ -5,9 +5,9 @@ description: 클랙 크리에이터 채널·채널 포스트·시리즈를 관�
 
 # 클랙 크리에이터 채널
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. 조회는 `content:read`, 변경은 `content:write`다. 내 채널 ID 자동 조회를 사용하는 명령은 읽기 권한도 필요하다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 조회는 `content:read`, 변경은 `content:write`다. 내 채널 ID 자동 조회를 사용하는 명령은 읽기 권한도 필요하다.
 
-CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. `clack --version`, `clack doctor --json`으로 연결을 확인한다. 필요한 경우 `clack login --scopes content:read,content:write --no-browser`를 실행하고 사용자가 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 승인한다. 수동 토큰은 숨김 입력 `clack login --token`이나 안전하게 주입한 `CLACK_TOKEN`으로 전달한다.
+CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. `clack --version`, `clack doctor --json`으로 연결을 확인한다. 필요한 경우 `clack login --scopes content:read,content:write --no-browser --no-qr`를 실행하고 사용자가 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다. 수동 토큰은 숨김 입력 `clack login --token`이나 안전하게 주입한 `CLACK_TOKEN`으로 전달한다.
 
 ## 채널과 시리즈
 

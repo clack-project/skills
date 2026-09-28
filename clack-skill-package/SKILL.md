@@ -5,24 +5,26 @@ description: 클랙 플랫폼 스킬(캐릭터 챗봇·퀴즈·세계관 등 제
 
 # 클랙 플랫폼 스킬 패키지
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. 여기서 "스킬"은 클랙 플랫폼이 제공하는 제작 템플릿(캐릭터 챗봇, 퀴즈, 세계관 등)이며 크리에이터가 만들어 다른 이용자가 쓰게 하는 산출물이다. 지침형(`instruction`) 스킬은 이 저장소의 에이전트 스킬과 같은 `SKILL.md`·`references/` 형식을 쓰지만, **클랙 레지스트리에 올려 심사받고 클랙 제작 AI와 다른 이용자가 쓰게 한다는 점**이 다르다. 사용자가 "클랙에 내 스킬을 등록·공개하고 싶다"고 하면 이 스킬을 쓰고, 이 저장소의 CLACK 사용법 스킬 설치·갱신은 `clack-setup`의 안내(`npx skills`)를 따른다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 여기서 "스킬"은 클랙 플랫폼이 제공하는 제작 템플릿(캐릭터 챗봇, 퀴즈, 세계관 등)이며 크리에이터가 만들어 다른 이용자가 쓰게 하는 산출물이다. 지침형(`instruction`) 스킬은 이 저장소의 에이전트 스킬과 같은 `SKILL.md`·`references/` 형식을 쓰지만, **클랙 레지스트리에 올려 심사받고 클랙 제작 AI와 다른 이용자가 쓰게 한다는 점**이 다르다. 사용자가 "클랙에 내 스킬을 등록·공개하고 싶다"고 하면 이 스킬을 쓰고, 이 저장소의 CLACK 사용법 스킬 설치·갱신은 `clack-setup`의 안내(`npx skills`)를 따른다.
 
 | 명령 | 필요한 권한 |
 |---|---|
 | `list`, `get`, `form`, `status` | `skill:read` |
 | `validate`(로컬), `validate --remote`, `push`, `complete` | 로컬 검증은 로그인 불필요, 나머지는 `skill:write` |
-| `cancel`, `deprecate` | `skill:write` |
-| `submit` | `skill:write`와 `skill:publish` 모두 |
-| `release` | `skill:publish` |
+| `cancel` | `skill:write` |
+| `submit` | `skill:write`와 `skill:publish` 모두(CLI가 제출 전에 상태를 조회하므로 `skill:read`도 필요) |
+| `release` | `skill:publish`(CLI가 게시 전에 상태를 조회하므로 `skill:read`도 필요) |
+| `deprecate` | `skill:publish` |
 
-서버 경로는 현재 개발 환경에서 기능 플래그가 켜진 계정과 해당 권한의 개인 액세스 토큰이 필요하다. 변경 명령은 PAT만 쓴다(서버 키 불가).
+서버 경로는 현재 개발 환경에서 기능 플래그가 켜진 계정과 해당 권한의 개인 액세스 토큰이 필요하다. 변경 명령은 PAT만 쓴다(서버 키 불가). 제출·게시·지원 종료까지 할 작업이면 아래처럼 세 권한을 처음부터 함께 요청해 재로그인을 피한다.
+
+테스트 앱(스테이징) 사용자라면 먼저 `clack config set env dev`를 한 번 실행한다. 이후 모든 `clack skill ...` 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙이지 않는다.
 
 ```sh
-clack config set env dev
-clack login --scopes skill:read,skill:write,skill:publish --no-browser
+clack login --scopes skill:read,skill:write,skill:publish --no-browser --no-qr
 ```
 
-`config set env dev`를 한 번 실행해 두면 이후 모든 `clack skill ...` 명령이 이 환경을 그대로 따르므로 매 명령에 `--env dev`를 붙일 필요가 없다. 로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다.
+로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다.
 
 ## 로컬 검증
 
@@ -72,7 +74,7 @@ clack skill deprecate <스킬-UUID> --json
 
 `submit`은 서버에서 검증 완료 상태(`review_status: validated`)와 패키지 해시를 다시 조회한 뒤에만 요청되며, 대상 버전과 해시를 보여주고 사용자 확인을 받는다. `--dry-run`은 제출 요청 없이 상태만 확인한다. 심사 판정 자체는 관리자 화면에서 이뤄진다.
 
-`release`는 승인된(`review_status: approved`) 버전만 허용한다. `--visibility`는 `private`, `unlisted`, `public` 중 하나이며 `public`은 별도 라이브러리 등재 승인이 추가로 필요하다. `cancel`은 업로드 또는 심사 중인 버전을 취소한다. `deprecate`는 스킬 **전체**를 지원 종료 상태로 바꾸며 되돌릴 수 없다. 새 설치·새 제작은 막히지만 이미 이 스킬을 고정한 기존 콘텐츠는 계속 동작한다. 대상과 효과(특히 `deprecate`의 되돌릴 수 없음)를 명확히 보여준 뒤 사용자의 구체적 확인을 받고, 비대화형 실행에는 `--yes`가 필요하다. 순번·조건으로만 대상을 지목했다면 해석한 실제 스킬·버전 ID를 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고).
+`release`는 승인된(`review_status: approved`) 버전만 허용한다. `--visibility`는 `private`, `unlisted`, `public` 중 하나이며 `public`은 별도 라이브러리 등재 승인이 추가로 필요하다. `cancel`은 업로드 또는 심사 중인 버전을 취소한다. `deprecate`는 스킬 **전체**를 지원 종료 상태로 바꾸며 되돌릴 수 없다. 새 설치·새 제작은 막히지만 이미 이 스킬을 고정한 기존 콘텐츠는 계속 동작한다. 지원 종료한 스킬에는 새 버전을 올릴 수 없고, 스킬 이름(slug)은 전체에서 한 번만 쓸 수 있어 같은 이름으로 다시 만들 수도 없다(`SKILL_SLUG_EXISTS`). 계속 제공하려면 다른 이름으로 새 스킬을 만들어야 한다고 확인 전에 함께 알린다. 대상과 효과(특히 `deprecate`의 되돌릴 수 없음)를 명확히 보여준 뒤 사용자의 구체적 확인을 받고, 비대화형 실행에는 `--yes`가 필요하다. 순번·조건으로만 대상을 지목했다면 해석한 실제 스킬·버전 ID를 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고).
 
 ## 제작 화면 플러그인(선택, plugin-static-v2)
 

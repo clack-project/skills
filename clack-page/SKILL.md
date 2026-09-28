@@ -5,7 +5,9 @@ description: 클랙 내 공개 홈(프로필)과 내가 소유한 세계관 페�
 
 # 클랙 공개 홈·세계관 페이지 꾸미기
 
-요구 버전: `clack >= 0.1.0`, Node.js 20 이상. `page` 명령은 게시글·HTML 콘텐츠(포켓)와 별도로 `custom-page:read`, `custom-page:write`, `custom-page:publish` 권한을 쓴다. 페이지 소유자만 편집할 수 있고, 개인 공개 홈의 대상 이용자는 서버가 로그인 계정으로 정한다.
+요구 버전: `clack >= 0.1.1`, Node.js 20 이상. `page` 명령은 게시글·HTML 콘텐츠(포켓)와 별도로 `custom-page:read`, `custom-page:write`, `custom-page:publish` 권한을 쓴다. 페이지 소유자만 편집할 수 있고, 개인 공개 홈의 대상 이용자는 서버가 로그인 계정으로 정한다.
+
+테스트 앱(스테이징) 사용자라면 먼저 `clack config set env dev`를 한 번 실행한다. 이후 모든 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙이지 않는다.
 
 | 명령 | 필요한 권한 |
 |---|---|
@@ -19,10 +21,10 @@ description: 클랙 내 공개 홈(프로필)과 내가 소유한 세계관 페�
 CLI가 없으면 공개된 `@clack-platform/cli`를 설치하거나 `npx @clack-platform/cli`를 사용한다. `clack --version`, `clack doctor --json`으로 계정·권한을 확인한다.
 
 ```sh
-clack login --scopes custom-page:read,custom-page:write,custom-page:publish --no-browser
+clack login --scopes custom-page:read,custom-page:write,custom-page:publish --no-browser --no-qr
 ```
 
-로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다.
+로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다.
 
 ## 페이지 만들고 파일 올리기
 
@@ -48,7 +50,7 @@ clack page status <페이지-UUID> --json
 clack page apply <페이지-UUID> <버전-UUID> --revision <status의 현재 수정 번호> --json
 ```
 
-`preview`가 반환한 확인 링크는 반드시 페이지 소유자와 같은 계정의 앱에서 열어 실제 표시를 확인해야 하며, 이 확인 완료 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. `submit`은 앱에서 확인을 마친 버전만 심사에 제출하며, 승인만으로 자동 적용되지 않는다. 이 환경에서 자동 승인 조건(정적 HTML·CSS만 사용, 새로 판정할 이미지 8장 이하 등)을 모두 만족하면 관리자 개입 없이 바로 승인될 수 있지만 적용은 별도다.
+`preview`가 반환한 확인 링크는 반드시 페이지 소유자와 같은 계정의 앱에서 열어 실제 표시를 확인해야 하며, 이 확인 완료 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. `submit`은 앱에서 확인을 마친 버전만 심사에 제출하며, 승인만으로 자동 적용되지 않는다. 이 환경에서 자동 승인 조건(정적 HTML·CSS만 사용, 허용된 CSS 함수만 사용, 새로 판정할 이미지 8장 이하 등)을 모두 만족하면 관리자 개입 없이 바로 승인될 수 있지만 적용은 별도다.
 
 `apply`는 승인된 버전의 파일과 헤더 설정을 실제로 내보인다. `--revision`은 `status`로 확인한 **현재** 수정 번호이며, 충돌(`CUSTOM_PAGE_CONFLICT`)이 나면 `status`를 다시 읽어 최신 수정 번호로 재시도한다. 이전에 승인됐던 버전으로 되돌리려면 그 버전 ID로 같은 절차를 쓴다.
 
