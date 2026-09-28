@@ -1,5 +1,16 @@
 # 변경 이력
 
+## 0.2.1 — 2026-09-28
+
+- 공개 도그푸딩(S7a)에서 발견된 결함을 반영했습니다.
+- `clack-setup`의 실행 경계를 정비했습니다: 디바이스 로그인의 승인 코드(`user_code`)와 승인 주소는 지금 대화 중인 사용자에게 그대로 보여주도록 예외를 명시했습니다(발급 후 10분 유효, 계정 본인만 입력, 공개 파일·커밋·기록용 로그에는 미노출). 기존 "답변에 복사하지 않는다" 원칙과 충돌하던 부분을 해소했습니다.
+- '구체적으로 승인했다'의 기준(대상 ID·이름과 결과를 보여준 뒤 받은 동의)을 `clack-setup`에 정의했습니다. 순번·조건·"방금 것"처럼 지목만 한 대상은 해석한 실제 ID·이름을 먼저 보여주고 한 번 확인받은 뒤에만 `--yes`(또는 `confirm:true`)를 쓰도록 `clack-setup`·`clack-products`와 파괴적 작업이 있는 나머지 스킬(`clack-content`·`clack-channel`·`clack-profile`·`clack-creator-content`·`clack-page`·`clack-skill-package`·`clack-platform-data`·`clack-mcp`) 문구를 맞췄습니다.
+- 2개 이상 또는 "전부·모두" 대상의 가격·상태·숨김·삭제·끌어올리기 등 다중 변경은 실행 전에 대상 표(ID·이름·변경 전후 값)와 예상 요청 수·현재 한도를 보여주고 1회 확인을 받도록 `clack-setup`·`clack-products`에 규칙을 추가하고 `clack-content`·`clack-channel`에도 적용했습니다.
+- 테스트 환경 전환 안내를 `clack config set env dev` 한 가지로 통일했습니다. README·INSTALL과 `clack-skill-package`·`clack-platform-data` 예시에 명령마다 박혀 있던 `--env dev` 반복을 정리했습니다(CLI의 프로필·환경 해석 수정과 맞물려 동작합니다).
+- 사용자에게 시각을 보여줄 때는 `time_contract`에 맞춰 현지 시각으로 바꿔 표시하고 원문은 기록·재조회용으로만 남기는 규칙을 `clack-setup`에 추가했습니다.
+- 오류 표의 404 행에 서버가 별도 코드를 주지 않을 때 CLI가 붙이는 기본 코드 `HTTP_404`를 함께 표기했습니다.
+- JSON 입력 파일은 셸 heredoc 대신 파일 편집 도구로 작성하라는 권장을 `clack-setup`에 추가했습니다(호스트 권한 확인 창 감소).
+
 ## 0.2.0 — 2026-09-28
 
 - 크리에이터용 스킬 4종을 추가했습니다: `clack-creator-content`(HTML/ZIP 작품 등록·업로드·심사·공개, 이미지 화보·캐릭터 자산 제작 포함), `clack-page`(내 공개 홈·세계관 페이지 HTML 꾸미기), `clack-skill-package`(클랙 플랫폼 스킬 제작 템플릿 패키지 검사·업로드·심사·게시), `clack-platform-data`(콘텐츠 서버 키 사용량·데이터, 서버 키·공유 문서 관리, 로컬 플랫폼 MCP).

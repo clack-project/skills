@@ -1,6 +1,6 @@
 {
   "name": "clack",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "클랙 계정의 상품·콘텐츠·프로필과 크리에이터 콘텐츠·페이지·스킬 패키지·플랫폼 데이터, MCP를 사용하는 스킬",
   "author": {
     "name": "CLACK Inc.",

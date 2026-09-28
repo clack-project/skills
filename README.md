@@ -16,7 +16,7 @@ clack login
 clack doctor --json
 ```
 
-테스트 앱 계정은 `clack login --env dev`를 사용하세요.
+테스트 앱 계정은 먼저 `clack config set env dev`를 실행한 뒤 위 순서대로 연결하세요. 이후 모든 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙일 필요가 없습니다.
 
 | 스킬 | 용도 |
 |---|---|

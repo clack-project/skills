@@ -43,7 +43,7 @@ clack channel post update 456 --status published --json
 
 수정은 제공한 필드만 변경한다. 본문 `content`나 마크다운을 전달하면 새 최종 본문을 구성한다. `hidden`은 목록 필터에서만 가능하며 작성·수정 상태는 `draft|published`다. 숨겨진 포스트를 발행 상태로 돌려 기능 제한을 우회하지 않는다.
 
-포스트·시리즈 삭제는 대상과 영향을 제시하고 구체적인 사용자 승인을 받은 뒤 실행한다. 이미 같은 대상을 삭제하도록 승인받았다면 반복 확인하지 않는다.
+포스트·시리즈 삭제는 대상과 영향을 제시하고 구체적인 사용자 승인을 받은 뒤 실행한다. 순번·조건·"방금 쓴 것"처럼 대상을 지목만 했다면 해석한 실제 ID·제목을 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고). 이미 이렇게 구체적으로 승인받았다면 같은 대상 삭제를 반복 확인하지 않는다. 여러 포스트를 한 번에 삭제·상태 변경할 때도 대상 표를 보여주고 1회 확인을 받는다.
 
 ```sh
 clack channel post delete 456 --yes --json
@@ -62,7 +62,7 @@ clack channel series delete 123 --yes --json
 |---|---|
 | 401 / `PAT_EXPIRED`, `PAT_REVOKED` | 연결 확인 후 다시 로그인 |
 | `SCOPE_DENIED`, `PAT_FORBIDDEN` | 필요한 콘텐츠 scope 확인 |
-| `CHANNEL_NOT_FOUND`, 404 | 내 채널·포스트·시리즈 존재와 ID 확인 |
+| `CHANNEL_NOT_FOUND`, 404, `HTTP_404` | 내 채널·포스트·시리즈 존재와 ID 확인 |
 | `IDENTITY_VERIFICATION_REQUIRED`, `USER_BANNED`, 403, 423 | 앱에서 자격·본인인증·계정 제한 확인 |
 | `VALIDATION_ERROR`, 409 | 블록·상태·슬러그 중복 확인 |
 | 429 | `retry_after`초 이상 대기 |

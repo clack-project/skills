@@ -37,7 +37,7 @@ clack me address update 123 -f address-changes.json --json
 clack me address default 123 --json
 ```
 
-수정 파일에는 바꿀 필드만 넣는다. 삭제는 수령인·식별에 필요한 최소 주소·ID를 제시하고 구체적인 사용자 승인을 받은 뒤 `clack me address delete 123 --yes --json`을 실행한다. 같은 주소 삭제를 이미 승인했다면 반복 확인하지 않는다.
+수정 파일에는 바꿀 필드만 넣는다. 삭제는 수령인·식별에 필요한 최소 주소·ID를 제시하고 구체적인 사용자 승인을 받은 뒤 `clack me address delete 123 --yes --json`을 실행한다. 순번·조건("첫 번째 배송지" 등)으로만 지목했다면 해석한 실제 ID·주소 요약을 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고). 같은 주소 삭제를 이렇게 구체적으로 승인받았다면 반복 확인하지 않는다.
 
 ## 비밀번호와 알림 이메일
 
@@ -69,7 +69,7 @@ clack me email set --enabled off --json
 | `SCOPE_DENIED`, `PAT_FORBIDDEN` | 필요한 profile 권한·별도 이미지 업로드 권한 확인 |
 | `IDENTITY_VERIFICATION_REQUIRED`, `USER_BANNED`, 423 | 앱에서 본인인증·계정 제한 확인 |
 | `TTY_REQUIRED` | 사용자의 대화형 터미널 또는 앱 사용 |
-| 404 / `NOT_FOUND` | 배송지 ID와 소유권 확인 |
+| 404 / `NOT_FOUND`, `HTTP_404` | 배송지 ID와 소유권 확인 |
 | `VALIDATION_ERROR`, 409 | 필드·현재 상태·인증 결과 확인 |
 | 429 | `retry_after`초 이상 대기 |
 | `USER_API_DISABLED`, `USER_API_WRITE_DISABLED` | 해당 기능 복구까지 중단 |

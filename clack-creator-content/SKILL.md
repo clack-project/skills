@@ -46,7 +46,7 @@ clack content unpublish <콘텐츠-UUID> --json
 
 `submit`은 심사를 요청하며 통과하면 자동으로 공개된다(`publish_on_approval`). 대상 버전과 효과를 보여준 뒤 사용자 확인을 받는다. `withdraw`는 진행 중인 심사를 취소한다. `publish`는 이미 승인됐지만 지금은 공개되지 않은 버전(게시중단 후 재공개 등)을 다시 공개할 때 쓰며 `creator-content:publish`가 필요하다. `unpublish`는 콘텐츠의 현재 공개를 중단하되 버전 자체는 남기므로, 나중에 사용자가 요청하면 같은 버전을 `publish`로 되살릴 수 있다고 안내한다.
 
-제출·공개·게시중단은 모두 대상 콘텐츠·버전·효과를 먼저 보여주고 사용자의 구체적 확인을 받은 뒤 실행한다. 같은 대상·행위를 이미 승인받았다면 반복 확인하지 않고 `--yes`를 사용한다.
+제출·공개·게시중단은 모두 대상 콘텐츠·버전·효과를 먼저 보여주고 사용자의 구체적 확인을 받은 뒤 실행한다. 순번·조건·"방금 올린 것"처럼 대상을 지목만 했다면 해석한 실제 콘텐츠·버전 ID를 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고). 같은 대상·행위를 이렇게 구체적으로 승인받았다면 반복 확인하지 않고 `--yes`를 사용한다.
 
 콘텐츠 서버 키(`csk_`) 조회·폐기와 이용자가 쓴 공유 문서 관리는 이 스킬이 아니라 `clack-platform-data` 스킬이 다룬다.
 
@@ -71,7 +71,7 @@ clack content unpublish <콘텐츠-UUID> --json
 | `SERVER_KEY_CENTER_ONLY` | 서버 키 발급·회전은 크리에이터 센터 전용, CLI로 시도하지 않기 |
 | `CONTENT_UPLOAD_FAILED`, `INVALID_UPLOAD_RESPONSE` | 새 업로드를 시작(재사용 안 함), 반복 실패 시 파일·네트워크 확인 |
 | `IDENTITY_VERIFICATION_REQUIRED`, `USER_BANNED`, 423 | 앱에서 본인인증·계정 제한 확인 |
-| 404 / `NOT_FOUND` | 콘텐츠·버전 ID와 소유권 확인 |
+| 404 / `NOT_FOUND`, `HTTP_404` | 콘텐츠·버전 ID와 소유권 확인 |
 | `VALIDATION_ERROR`, 409 | 정책 버전·현재 상태·심사 상태 확인 |
 | 429 | `retry_after`초 이상 대기 |
 | `USER_API_DISABLED`, `USER_API_WRITE_DISABLED`, 8 / `USER_API_UNAVAILABLE` | 연결한 서버에 기능이 없거나 중단됨, `clack-setup` 절차로 환경 확인 |

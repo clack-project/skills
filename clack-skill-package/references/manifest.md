@@ -50,4 +50,4 @@ JSON Schema 객체이며 최상위는 `type: "object"`, `additionalProperties: f
 
 ## 실제 구조를 참고하는 방법
 
-`template`/`tool` 매니페스트는 필드 간 의존성(자산 슬롯 ↔ 폼 위젯, 엔티티 매핑 등)이 많아 처음부터 새로 설계하기보다, 이미 공개된 공식 템플릿 하나를 `clack skill get <slug> --env dev`로 찾고 `clack skill form <slug> <버전> --env dev`로 실제 폼 스키마를 내려받아 참고한 뒤 필요한 부분만 바꾸는 편이 안전하다. 최종 판정은 항상 `clack skill validate --remote` 또는 실제 `push`의 서버 응답을 따른다.
+`template`/`tool` 매니페스트는 필드 간 의존성(자산 슬롯 ↔ 폼 위젯, 엔티티 매핑 등)이 많아 처음부터 새로 설계하기보다, `clack config set env dev` 후 이미 공개된 공식 템플릿 하나를 `clack skill get <slug>`로 찾고 `clack skill form <slug> <버전>`으로 실제 폼 스키마를 내려받아 참고한 뒤 필요한 부분만 바꾸는 편이 안전하다. 최종 판정은 항상 `clack skill validate --remote` 또는 실제 `push`의 서버 응답을 따른다.

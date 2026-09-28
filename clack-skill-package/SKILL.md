@@ -18,16 +18,17 @@ description: 클랙 플랫폼 스킬(캐릭터 챗봇·퀴즈·세계관 등 제
 서버 경로는 현재 개발 환경에서 기능 플래그가 켜진 계정과 해당 권한의 개인 액세스 토큰이 필요하다. 변경 명령은 PAT만 쓴다(서버 키 불가).
 
 ```sh
-clack login --env dev --scopes skill:read,skill:write,skill:publish --no-browser
+clack config set env dev
+clack login --scopes skill:read,skill:write,skill:publish --no-browser
 ```
 
-로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다.
+`config set env dev`를 한 번 실행해 두면 이후 모든 `clack skill ...` 명령이 이 환경을 그대로 따르므로 매 명령에 `--env dev`를 붙일 필요가 없다. 로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다.
 
 ## 로컬 검증
 
 ```sh
 clack skill validate ./my-skill --json
-clack skill validate ./my-skill.zip --remote --env dev --json
+clack skill validate ./my-skill.zip --remote --json
 ```
 
 `clack.skill.json`과 `SKILL.md`가 있는 디렉터리 또는 ZIP을 검사한다. 로컬 검증은 로그인 없이 실행할 수 있다. `--remote`는 서버에서도 같은 패키지를 드라이런 검증한다(PAT 필요). 패키지 구조·필수 필드·파일 한도는 [references/manifest.md](references/manifest.md)를 읽는다. 최소 예시(`type: instruction`)는 다음과 같이 실제로 검증을 통과한다.
@@ -46,14 +47,14 @@ clack skill validate ./my-skill.zip --remote --env dev --json
 ## 업로드와 조회
 
 ```sh
-clack skill push ./my-skill --env dev --json
-clack skill push ./my-skill --skill-id <스킬-UUID> --env dev --json
-clack skill complete <스킬-UUID> <버전-UUID> --env dev --json
-clack skill list --category character_chat --official true --env dev --json
-clack skill list --all --env dev --json
-clack skill get my-skill --env dev --json
-clack skill form my-skill 1.0.0 --env dev --json
-clack skill status <스킬-UUID> <버전-UUID> --env dev --json
+clack skill push ./my-skill --json
+clack skill push ./my-skill --skill-id <스킬-UUID> --json
+clack skill complete <스킬-UUID> <버전-UUID> --json
+clack skill list --category character_chat --official true --json
+clack skill list --all --json
+clack skill get my-skill --json
+clack skill form my-skill 1.0.0 --json
+clack skill status <스킬-UUID> <버전-UUID> --json
 ```
 
 `push`는 서버 사전 검증 후 새 스킬 또는 기존 스킬(`--skill-id`)의 새 버전을 예약하고, 서명된 URL에 ZIP을 전송한 뒤 완료 처리까지 한 번에 진행한다. 완료 응답만 실패하면 출력된 `clack skill complete <스킬-UUID> <버전-UUID>`로 같은 버전을 재처리한다. `--dry-run`은 서버를 변경하지 않는다. `SKILL_VERSION_MAJOR_REQUIRED` 오류는 같은 버전 번호를 호환되지 않게 고칠 수 없다는 뜻이므로, `clack.skill.json`·`SKILL.md`의 `version`을 올려 다시 푸시하거나 먼저 `clack skill cancel`로 이 버전을 지운다.
@@ -63,15 +64,15 @@ clack skill status <스킬-UUID> <버전-UUID> --env dev --json
 ## 심사 제출·게시·취소·지원종료
 
 ```sh
-clack skill submit <스킬-UUID> <버전-UUID> --env dev --json
-clack skill cancel <스킬-UUID> <버전-UUID> --env dev --json
-clack skill release <스킬-UUID> <버전-UUID> --visibility unlisted --env dev --json
-clack skill deprecate <스킬-UUID> --env dev --json
+clack skill submit <스킬-UUID> <버전-UUID> --json
+clack skill cancel <스킬-UUID> <버전-UUID> --json
+clack skill release <스킬-UUID> <버전-UUID> --visibility unlisted --json
+clack skill deprecate <스킬-UUID> --json
 ```
 
 `submit`은 서버에서 검증 완료 상태(`review_status: validated`)와 패키지 해시를 다시 조회한 뒤에만 요청되며, 대상 버전과 해시를 보여주고 사용자 확인을 받는다. `--dry-run`은 제출 요청 없이 상태만 확인한다. 심사 판정 자체는 관리자 화면에서 이뤄진다.
 
-`release`는 승인된(`review_status: approved`) 버전만 허용한다. `--visibility`는 `private`, `unlisted`, `public` 중 하나이며 `public`은 별도 라이브러리 등재 승인이 추가로 필요하다. `cancel`은 업로드 또는 심사 중인 버전을 취소한다. `deprecate`는 스킬 **전체**를 지원 종료 상태로 바꾸며 되돌릴 수 없다. 새 설치·새 제작은 막히지만 이미 이 스킬을 고정한 기존 콘텐츠는 계속 동작한다. 대상과 효과(특히 `deprecate`의 되돌릴 수 없음)를 명확히 보여준 뒤 사용자의 구체적 확인을 받고, 비대화형 실행에는 `--yes`가 필요하다.
+`release`는 승인된(`review_status: approved`) 버전만 허용한다. `--visibility`는 `private`, `unlisted`, `public` 중 하나이며 `public`은 별도 라이브러리 등재 승인이 추가로 필요하다. `cancel`은 업로드 또는 심사 중인 버전을 취소한다. `deprecate`는 스킬 **전체**를 지원 종료 상태로 바꾸며 되돌릴 수 없다. 새 설치·새 제작은 막히지만 이미 이 스킬을 고정한 기존 콘텐츠는 계속 동작한다. 대상과 효과(특히 `deprecate`의 되돌릴 수 없음)를 명확히 보여준 뒤 사용자의 구체적 확인을 받고, 비대화형 실행에는 `--yes`가 필요하다. 순번·조건으로만 대상을 지목했다면 해석한 실제 스킬·버전 ID를 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고).
 
 ## 제작 화면 플러그인(선택, plugin-static-v2)
 
@@ -95,7 +96,7 @@ clack skill deprecate <스킬-UUID> --env dev --json
 | `SKILL_NOT_APPROVED` | 승인된 버전만 게시 가능, 심사 상태 확인 |
 | `SKILL_PLUGIN_INVALID`, `PLUGIN_STATIC_CHECK_STALE` | 플러그인 구조·CSP 규칙 재확인, 이전 규칙으로 검사된 버전은 새로 올리기 |
 | `IDENTITY_VERIFICATION_REQUIRED`, `USER_BANNED`, 423 | 앱에서 본인인증·계정 제한 확인 |
-| 404 / `NOT_FOUND` | 스킬·버전 ID와 소유권 확인 |
+| 404 / `NOT_FOUND`, `HTTP_404` | 스킬·버전 ID와 소유권 확인 |
 | 429 | `retry_after`초 이상 대기 |
 | `USER_API_DISABLED`, `USER_API_WRITE_DISABLED`, 8 / `USER_API_UNAVAILABLE` | 연결한 서버에 기능이 없거나 중단됨, `clack-setup` 절차로 환경 확인 |
 | `OUTCOME_UNKNOWN`, 네트워크·5xx | 반영 여부 확인 전 자동 재실행 금지 |

@@ -15,29 +15,32 @@ description: 클랙 콘텐츠 서버 키로 사용량·이용자 데이터를 �
 둘은 서로 다른 인증 평면이며 섞어 쓸 수 없다. PAT가 필요하면 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다.
 
 ```sh
-clack login --env dev --scopes platform --no-browser
+clack config set env dev
+clack login --scopes platform --no-browser
 ```
+
+`config set env dev`를 한 번 실행해 두면 이후 모든 `clack platform ...`·`clack content ...` 명령이 이 환경을 그대로 따르므로 매 명령에 `--env dev`를 붙일 필요가 없다.
 
 ## 서버 키로 사용량·데이터 조회
 
 ```sh
 export CLACK_SERVER_KEY=csk_...   # 명령 인자·CLI 자격 파일에 저장하지 않는다
-clack platform usage --from 2026-09-01T00:00:00.000Z --to 2026-09-02T00:00:00.000Z --env dev --json
-clack platform data get scores slot --env dev --json
-clack platform data get scores slot --viewer-id v_xxxxxxxxxxxxxxxxxxxxxxxxxx --env dev --json
-clack platform data list scores --owner me --limit 20 --env dev --json
-clack platform data leaderboard scores --limit 10 --env dev --json
+clack platform usage --from 2026-09-01T00:00:00.000Z --to 2026-09-02T00:00:00.000Z --json
+clack platform data get scores slot --json
+clack platform data get scores slot --viewer-id v_xxxxxxxxxxxxxxxxxxxxxxxxxx --json
+clack platform data list scores --owner me --limit 20 --json
+clack platform data leaderboard scores --limit 10 --json
 ```
 
-`usage`는 최대 90일 구간만 조회한다. `--viewer-id`(`v_` + 26자)는 시청자(이용자) 범위 문서에 쓴다. 목록은 `--owner me|any`, `--order updated_desc|sort_desc|sort_asc`, `--cursor`, `--limit 1~50`을, 순위는 `--limit 1~100`을 지원한다. 서버 키는 발급받은 환경(`--env dev`/`--env prod`)에서만 쓴다.
+`usage`는 최대 90일 구간만 조회한다. `--viewer-id`(`v_` + 26자)는 시청자(이용자) 범위 문서에 쓴다. 목록은 `--owner me|any`, `--order updated_desc|sort_desc|sort_asc`, `--cursor`, `--limit 1~50`을, 순위는 `--limit 1~100`을 지원한다. 서버 키는 발급받은 환경에서만 쓴다. 연결한 `--env`(또는 `config set env`)가 키를 발급받은 환경과 다르면 인증이 실패하므로, 다른 환경으로 전환했다면 그 환경의 키로 바꿔야 한다.
 
 ## 단일 문서 쓰기·수정·삭제
 
 ```sh
-clack platform data put scores slot --file ./score.json --if-absent --env dev --json
-clack platform data put scores slot --file ./score.json --if-rev 3 --env dev --json
-clack platform data patch scores slot --file ./score-patch.json --if-rev 3 --env dev --json
-clack platform data delete scores slot --env dev --json
+clack platform data put scores slot --file ./score.json --if-absent --json
+clack platform data put scores slot --file ./score.json --if-rev 3 --json
+clack platform data patch scores slot --file ./score-patch.json --if-rev 3 --json
+clack platform data delete scores slot --json
 ```
 
 `--file`은 64 KiB 이하 JSON 객체 파일이다. `put`은 `--if-absent`(없을 때만 생성) 또는 `--if-rev <현재 개정 번호>` 중 하나가 필요하고, `patch`는 `--if-rev`가 필수다. 삭제에는 개정 조건이 없으므로 실행 전 대상을 다시 확인한다. `--dry-run`은 파일·조건만 검사하고 메서드·경로·본문 크기·SHA-256을 보여주며 서버를 바꾸지 않는다. 비대화형 실제 변경에는 `--yes`가 필요하다.
@@ -45,18 +48,18 @@ clack platform data delete scores slot --env dev --json
 ## PAT 전용: 내 콘텐츠 서버 키·공유 문서
 
 ```sh
-clack content server-keys list --env dev <콘텐츠-UUID> --json
-clack content server-keys revoke --env dev <콘텐츠-UUID> <키-ID> --yes --json
-clack content shared collections --env dev <콘텐츠-UUID> --json
-clack content shared list --env dev <콘텐츠-UUID> ranking --json
-clack content shared get --env dev <콘텐츠-UUID> ranking entry-1 --json
-clack content shared hide --env dev <콘텐츠-UUID> ranking entry-1 --yes --json
-clack content shared delete --env dev <콘텐츠-UUID> ranking entry-1 --yes --json
+clack content server-keys list <콘텐츠-UUID> --json
+clack content server-keys revoke <콘텐츠-UUID> <키-ID> --yes --json
+clack content shared collections <콘텐츠-UUID> --json
+clack content shared list <콘텐츠-UUID> ranking --json
+clack content shared get <콘텐츠-UUID> ranking entry-1 --json
+clack content shared hide <콘텐츠-UUID> ranking entry-1 --yes --json
+clack content shared delete <콘텐츠-UUID> ranking entry-1 --yes --json
 ```
 
 `platform:read`는 조회, `platform:write`는 폐기·숨김·삭제다. **서버 키 발급·회전은 PAT보다 오래 사는 비밀값을 새로 만들기 때문에 크리에이터 센터 로그인 세션 전용이다.** `content server-keys issue`·`rotate`는 안내만 출력하고 요청을 보내지 않는다. 서버 키 원문은 센터의 발급·회전 응답에만 한 번 표시되며, CLI·MCP 어디에도 다시 표시되지 않는다.
 
-`shared`는 이용자가 쓴 콘텐츠 데이터(순위표 항목 등)를 다룬다. `hide`는 목록·순위에서 제외하되 문서 자체는 남기고, `delete`는 영구 삭제다. 폐기·숨김·삭제 전에는 대상과 효과를 보여주고 사용자 확인을 받는다.
+`shared`는 이용자가 쓴 콘텐츠 데이터(순위표 항목 등)를 다룬다. `hide`는 목록·순위에서 제외하되 문서 자체는 남기고, `delete`는 영구 삭제다. 폐기·숨김·삭제 전에는 대상과 효과를 보여주고 사용자 확인을 받는다. 순번·조건으로만 대상을 지목했다면 해석한 실제 ID를 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고).
 
 ## 로컬 stdio MCP
 
@@ -91,7 +94,7 @@ clack mcp config --platform --codex --env dev
 | `SERVER_KEY_CENTER_ONLY` | 발급·회전은 크리에이터 센터 전용, CLI로 시도하지 않기 |
 | `VALIDATION_ERROR` | 조회 기간(90일)·본문 크기(64 KiB)·`--if-rev`/`--if-absent` 지정 확인 |
 | 409 / `CONFLICT` | 문서의 현재 개정 번호를 다시 조회한 뒤 재시도 |
-| 404 / `NOT_FOUND` | 콘텐츠·키·문서 ID와 소유권 확인 |
+| 404 / `NOT_FOUND`, `HTTP_404` | 콘텐츠·키·문서 ID와 소유권 확인 |
 | 429 | `retry_after`초 이상 대기 |
 | `USER_API_DISABLED`, `USER_API_WRITE_DISABLED`, 8 / `USER_API_UNAVAILABLE` | 연결한 서버에 기능이 없거나 중단됨, `clack-setup` 절차로 환경 확인 |
 | `OUTCOME_UNKNOWN`, 네트워크·5xx | 반영 여부 확인 전 자동 재실행 금지 |

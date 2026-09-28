@@ -81,7 +81,7 @@ clack page submit <페이지-UUID> <새-버전-UUID> --json
 
 - `--json`의 `ok`, `data`, `time_contract`를 확인한다.
 - `--dry-run`은 파일·입력 검증만 하며 업로드·서버 변경을 하지 않는다.
-- 적용·복원·해제 전에는 대상 버전과 효과를 보여주고 사용자 확인을 받는다. 같은 대상·행위를 이미 승인받았다면 반복 확인하지 않고 `--yes`를 사용한다.
+- 적용·복원·해제 전에는 대상 버전과 효과를 보여주고 사용자 확인을 받는다. 순번·조건("이전 버전")처럼 대상을 지목만 했다면 해석한 실제 버전 ID를 먼저 보여주고 확인받는다(`clack-setup`의 승인 기준 참고). 같은 대상·행위를 이렇게 구체적으로 승인받았다면 반복 확인하지 않고 `--yes`를 사용한다.
 - 네트워크 실패·응답 유실·5xx 뒤에는 업로드·심사 제출·적용·해제를 자동 재시도하지 않는다. `status`로 반영 여부를 먼저 확인한다.
 
 | 오류 | 대응 |
@@ -93,6 +93,6 @@ clack page submit <페이지-UUID> <새-버전-UUID> --json
 | `CUSTOM_PAGE_APPROVAL_REQUIRED` | 파일·설정 확인과 심사 승인이 모두 필요, 상태 재확인 |
 | `CUSTOM_PAGE_RUNTIME_FORBIDDEN` | 런타임 선언이 있는 패키지는 페이지로 사용 불가 |
 | `CUSTOM_PAGE_DISABLED`, 8 / `USER_API_UNAVAILABLE` | 이 환경에서 기능 준비 중이거나 서버가 아직 지원하지 않음, `clack-setup` 절차로 환경 확인 |
-| 404 / `NOT_FOUND` | 페이지·버전 ID와 소유권 확인 |
+| 404 / `NOT_FOUND`, `HTTP_404` | 페이지·버전 ID와 소유권 확인 |
 | 429 | `retry_after`초 이상 대기 |
 | `OUTCOME_UNKNOWN`, 네트워크·5xx | 반영 여부 확인 전 자동 재실행 금지 |
