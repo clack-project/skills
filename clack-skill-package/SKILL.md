@@ -78,7 +78,7 @@ clack skill deprecate <스킬-UUID> --json
 
 ## 제작 화면 플러그인(선택, plugin-static-v2)
 
-`clack.skill.json`의 `authoring.plugin`으로 제작 화면 플러그인을 선언하면 서버가 번들을 정적 분석해 위험 기능이 없다고 증명되는 코드만 통과시킨다. 선언·CSP·금지 API·메시지 규칙 요약은 [references/plugin-static-v2.md](references/plugin-static-v2.md)를 읽는다. 상세 정본은 크리에이터 가이드 `/guide/reference/templates/editor-plugins`(T09)와 실습 과정 `/guide/courses/center-editor-plugin`(T05)이다.
+`clack.skill.json`의 `authoring.plugin`으로 제작 화면 플러그인을 선언하면 서버가 번들을 정적 분석해 위험 기능이 없다고 증명되는 코드만 통과시킨다. 선언·CSP·금지 API·메시지 규칙 요약은 [references/plugin-static-v2.md](references/plugin-static-v2.md)를 읽는다. 상세 정본은 크리에이터 가이드 `/ko/guide/reference/templates/editor-plugins`(T09)와 실습 과정 `/ko/guide/courses/center-editor-plugin`(T05)이다.
 
 ## 한도·결과·안전
 
@@ -102,3 +102,7 @@ clack skill deprecate <스킬-UUID> --json
 | 429 | `retry_after`초 이상 대기 |
 | `USER_API_DISABLED`, `USER_API_WRITE_DISABLED`, 8 / `USER_API_UNAVAILABLE` | 연결한 서버에 기능이 없거나 중단됨, `clack-setup` 절차로 환경 확인 |
 | `OUTCOME_UNKNOWN`, 네트워크·5xx | 반영 여부 확인 전 자동 재실행 금지 |
+
+크리에이터 센터·가이드는 `/ko`·`/en` 주소를 사용하며 로그인 상태에서는 앱 언어 설정을 따릅니다. 콘텐츠는 SDK 1.2.0의 `clack.locale` 또는 `window.__clack_env?.locale`에서 앱 언어(`language`)·기기 지역(`region`)·BCP 47 태그(`tag`)를 동기적으로 읽습니다. 번역은 `language`로 고르고 숫자·날짜는 `tag`를 `Intl`에 전달합니다. 기존 `me().locale`은 `ko|en`이고 `me().locale_tag`가 전체 태그입니다.
+
+새 다국어 계약은 개발 센터와 최신 staging 테스터 앱에서 제공하며, 운영에서는 센터 초기 출시와 함께 별도로 활성화합니다. 상세 계약과 예제는 개발 센터의 가이드 P11(`/ko/guide/reference/platform/multilingual-content`)을 확인하세요. 앱 언어 환경값이 없는 구버전 앱에서는 `clack.locale.source`가 `browser`이며 브라우저 언어로 대체됩니다.
