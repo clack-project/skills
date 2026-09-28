@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "클랙 공식 에이전트 스킬",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "clack",
       "source": "./",
-      "description": "클랙 계정의 상품·콘텐츠·프로필과 MCP를 사용하는 스킬"
+      "description": "클랙 계정의 상품·콘텐츠·프로필과 크리에이터 콘텐츠·페이지·스킬 패키지·플랫폼 데이터, MCP를 사용하는 스킬"
     }
   ]
 }

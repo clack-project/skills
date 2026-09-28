@@ -21,8 +21,10 @@ description: 클랙 CLI 설치·로그인·토큰 권한·doctor 오류를 설�
 | 상품 조회 / 변경 | `product:read` / `product:write` |
 | 글·댓글·채널 조회 / 변경 | `content:read` / `content:write` |
 | 새 이미지 업로드 | `product:write` 또는 `content:write` |
-
-`creator-content`, `skill`, `platform`, `custom-page` 권한 묶음도 있지만 크리에이터 콘텐츠·페이지·스킬 패키지·플랫폼 데이터는 이 스킬 세트가 아직 다루지 않는다(추후 스킬 추가 예정). 사용자가 이 기능을 요청하면 CLI `--help`로 직접 확인하거나 다음 공개를 기다리도록 안내한다.
+| 크리에이터 HTML/ZIP 작품·이미지 제작(`clack-creator-content`) | `creator-content:read` / `creator-content:write`, 공개는 `creator-content:publish` 추가 |
+| 내 공개 홈·세계관 페이지 꾸미기(`clack-page`) | `custom-page:read` / `custom-page:write`, 제출·적용은 `custom-page:publish` 추가 |
+| 클랙 플랫폼 스킬(제작 템플릿) 패키지(`clack-skill-package`) | `skill:read` / `skill:write`, 심사 제출·게시는 `skill:publish` 추가 |
+| 콘텐츠 서버 키·공유 문서 관리(`clack-platform-data`) | `platform:read` / `platform:write`(서버 키 자체 데이터 조회·쓰기는 `CLACK_SERVER_KEY`의 별도 `data:read`/`data:write`) |
 
 ```sh
 clack login --scopes profile:read,product:read,product:write --no-browser

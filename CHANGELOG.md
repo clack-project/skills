@@ -1,5 +1,13 @@
 # 변경 이력
 
+## 0.2.0 — 2026-09-28
+
+- 크리에이터용 스킬 4종을 추가했습니다: `clack-creator-content`(HTML/ZIP 작품 등록·업로드·심사·공개, 이미지 화보·캐릭터 자산 제작 포함), `clack-page`(내 공개 홈·세계관 페이지 HTML 꾸미기), `clack-skill-package`(클랙 플랫폼 스킬 제작 템플릿 패키지 검사·업로드·심사·게시), `clack-platform-data`(콘텐츠 서버 키 사용량·데이터, 서버 키·공유 문서 관리, 로컬 플랫폼 MCP).
+- 이미지 화보·캐릭터 가져오기 제작(`clack authoring`)은 별도 스킬로 두지 않고 `clack-creator-content`에 흡수했습니다. 필요 scope(`creator-content:write`)가 같고 완성한 자산을 본인 콘텐츠로 가져오는 흐름이 이어져 있기 때문입니다.
+- `clack-setup`의 권한 표에 새 scope 묶음(`creator-content:*`, `custom-page:*`, `skill:*`, `platform:*`/`CLACK_SERVER_KEY`)과 해당 스킬을 추가했습니다.
+- README·INSTALL·`.claude-plugin/plugin.json`·`.claude-plugin/marketplace.json`·`scripts/setup.mjs`의 스킬 목록을 10종으로 갱신했습니다.
+- 현재 CLI(`content`, `page`, `skill`, `platform`, `authoring` 명령과 JSON Schema 매니페스트)를 소스·로컬 검증으로 대조해 작성했습니다.
+
 ## 0.1.0 — 2026-09-28
 
 - 설치·연결, 상품, 콘텐츠, 채널, 프로필, MCP의 스킬 6종을 추가했습니다.

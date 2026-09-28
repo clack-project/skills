@@ -62,7 +62,7 @@ try {
   const plugin = JSON.parse(await read(join(root, '.claude-plugin/plugin.json')));
   const marketplace = JSON.parse(await read(join(root, '.claude-plugin/marketplace.json')));
   if (plugin.name !== 'clack' || plugin.license !== 'MIT') fail(root, '플러그인 이름·라이선스를 확인하세요.');
-  if (JSON.stringify([...plugin.skills].sort()) !== JSON.stringify(SKILLS.map(name => `./${name}`).sort())) fail(root, '플러그인은 스킬 6종을 정확히 등록해야 합니다.');
+  if (JSON.stringify([...plugin.skills].sort()) !== JSON.stringify(SKILLS.map(name => `./${name}`).sort())) fail(root, `플러그인은 스킬 ${SKILLS.length}종을 정확히 등록해야 합니다.`);
   if (marketplace.name !== 'clack' || marketplace.plugins?.length !== 1 || marketplace.plugins[0].name !== 'clack' || marketplace.plugins[0].source !== './') fail(root, '마켓플레이스 등록이 일치하지 않습니다.');
   if (plugin.version !== marketplace.metadata?.version) fail(root, '플러그인·마켓플레이스 버전이 다릅니다.');
 } catch (error) { fail(root, `플러그인 JSON 오류: ${error.message}`); }

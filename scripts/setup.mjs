@@ -5,7 +5,8 @@ import { dirname, delimiter, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
-export const SKILLS = ['clack-setup', 'clack-products', 'clack-content', 'clack-channel', 'clack-profile', 'clack-mcp'];
+export const SKILLS = ['clack-setup', 'clack-products', 'clack-content', 'clack-channel', 'clack-profile', 'clack-mcp',
+  'clack-creator-content', 'clack-page', 'clack-skill-package', 'clack-platform-data'];
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const HOSTS = {
   'claude-code': { config: '.claude', project: '.claude/skills' },
