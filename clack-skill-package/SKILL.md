@@ -44,7 +44,7 @@ clack skill validate ./my-skill.zip --remote --json
 }
 ```
 
-영어 화면까지 채우려면 `display`에 `title.en`·`summary.en`을 더한다. 상세 소개는 `display.description`, 영어 태그는 `display.tags_i18n`, 새 버전의 변경 안내는 `display.release_notes`에 적는다(모두 `ko` 필수·`en` 선택, `clack >= 0.3.0`). `description`이 없으면 상세 소개는 `SKILL.md`의 `description`으로 폴백하고, `release_notes`에 `en`이 없으면 영어 화면에서는 변경 안내를 보이지 않는다. 변경 기록은 `SKILL.md`가 아니라 `release_notes`에 적고, `SKILL.md`의 `description`에는 버전 표현을 넣지 않는다.
+영어 화면까지 채우려면 `display`에 `title.en`·`summary.en`을 더한다. 상세 소개는 `display.description`, 영어 태그는 `display.tags_i18n`, 새 버전의 변경 안내는 `display.release_notes`에 적는다(`description`·`release_notes`는 `ko` 필수·`en` 선택, `tags_i18n`은 `ko` 키를 두지 않고 `{ "en": [...] }`만 쓰며 기본 `tags`가 있어야 한다. 모두 `clack >= 0.3.0`). `description`이 없으면 상세 소개는 `SKILL.md`의 `description`으로 폴백하고, `release_notes`에 `en`이 없으면 영어 화면에서는 변경 안내를 보이지 않는다. 변경 기록은 `SKILL.md`가 아니라 `release_notes`에 적고, `SKILL.md`의 `description`에는 버전 표현을 넣지 않는다.
 
 ```json
 "display": {
