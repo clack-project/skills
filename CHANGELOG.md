@@ -1,5 +1,9 @@
 # 변경 이력
 
+## 0.2.4 — 2026-09-30
+
+- 제작 세션 완료·포기(CLI 0.3.1 이상)와 로컬 MCP action, 폼 PAT/센터 전용 모드, 패키징·종료 오류 및 응답 유실 시 상태 조회를 안내했습니다. 기존 사용자 세션은 유지하고 사용자가 승인한 대상의 포기만 실행합니다.
+
 ## 0.2.3 — 2026-09-30
 
 - `clack-skill-package`에 매니페스트 화면 언어별 표시 키를 안내했습니다: `display.description`(상세 소개)·`display.tags_i18n`(영어 태그)·`display.release_notes`(새 버전 변경 안내)와 화면 언어별 폴백, 목록 카드 응답에는 `description`·`release_notes`가 없다는 점, 변경 기록은 `SKILL.md`가 아니라 `release_notes`에 적는다는 규칙입니다. 이 키와 폼의 `x-clack-help-i18n`·`x-clack-placeholder-i18n`을 쓰는 패키지는 `clack >= 0.3.0`이 필요하다고 표기했습니다(다른 스킬의 요구 버전은 그대로).
