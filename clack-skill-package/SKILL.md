@@ -5,7 +5,7 @@ description: 클랙 플랫폼 스킬(캐릭터 챗봇·퀴즈·세계관 등 제
 
 # 클랙 플랫폼 스킬 패키지
 
-요구 버전: `clack >= 0.1.1`, Node.js 20 이상. 여기서 "스킬"은 클랙 플랫폼이 제공하는 제작 템플릿(캐릭터 챗봇, 퀴즈, 세계관 등)이며 크리에이터가 만들어 다른 이용자가 쓰게 하는 산출물이다. 지침형(`instruction`) 스킬은 이 저장소의 에이전트 스킬과 같은 `SKILL.md`·`references/` 형식을 쓰지만, **클랙 레지스트리에 올려 심사받고 클랙 제작 AI와 다른 이용자가 쓰게 한다는 점**이 다르다. 사용자가 "클랙에 내 스킬을 등록·공개하고 싶다"고 하면 이 스킬을 쓰고, 이 저장소의 CLACK 사용법 스킬 설치·갱신은 `clack-setup`의 안내(`npx skills`)를 따른다.
+요구 버전: `clack >= 0.1.1`(`display.description`·`tags_i18n`·`release_notes`나 폼의 `x-clack-help-i18n`·`x-clack-placeholder-i18n`을 쓰는 패키지는 `clack >= 0.3.0`), Node.js 20 이상. 여기서 "스킬"은 클랙 플랫폼이 제공하는 제작 템플릿(캐릭터 챗봇, 퀴즈, 세계관 등)이며 크리에이터가 만들어 다른 이용자가 쓰게 하는 산출물이다. 지침형(`instruction`) 스킬은 이 저장소의 에이전트 스킬과 같은 `SKILL.md`·`references/` 형식을 쓰지만, **클랙 레지스트리에 올려 심사받고 클랙 제작 AI와 다른 이용자가 쓰게 한다는 점**이 다르다. 사용자가 "클랙에 내 스킬을 등록·공개하고 싶다"고 하면 이 스킬을 쓰고, 이 저장소의 CLACK 사용법 스킬 설치·갱신은 `clack-setup`의 안내(`npx skills`)를 따른다.
 
 | 명령 | 필요한 권한 |
 |---|---|
@@ -41,6 +41,20 @@ clack skill validate ./my-skill.zip --remote --json
   "display": { "title": { "ko": "내 스킬" }, "summary": { "ko": "간단한 설명" }, "category": "character_chat" },
   "authoring": { "modes": ["agent"], "surfaces": ["cli"] },
   "output": { "content_kind": "html" }
+}
+```
+
+영어 화면까지 채우려면 `display`에 `title.en`·`summary.en`을 더한다. 상세 소개는 `display.description`, 영어 태그는 `display.tags_i18n`, 새 버전의 변경 안내는 `display.release_notes`에 적는다(모두 `ko` 필수·`en` 선택, `clack >= 0.3.0`). `description`이 없으면 상세 소개는 `SKILL.md`의 `description`으로 폴백하고, `release_notes`에 `en`이 없으면 영어 화면에서는 변경 안내를 보이지 않는다. 변경 기록은 `SKILL.md`가 아니라 `release_notes`에 적고, `SKILL.md`의 `description`에는 버전 표현을 넣지 않는다.
+
+```json
+"display": {
+  "title": { "ko": "내 스킬", "en": "My skill" },
+  "summary": { "ko": "간단한 설명", "en": "A short description" },
+  "category": "character_chat",
+  "tags": ["소개"],
+  "tags_i18n": { "en": ["intro"] },
+  "description": { "ko": "스킬 상세에 보일 소개", "en": "Introduction shown on the skill page" },
+  "release_notes": { "ko": "이미지 칸을 추가했어요.", "en": "Added an image slot." }
 }
 ```
 

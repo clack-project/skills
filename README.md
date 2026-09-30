@@ -8,7 +8,7 @@
 npx skills add clack-project/skills
 ```
 
-설치할 스킬과 에이전트는 대화형 화면에서 선택합니다. 프로젝트 설치가 기본이며, 전역 설치에는 `-g`를 사용합니다. 스킬 설치와 CLACK 계정 연결은 별도입니다. CLI 사용에는 Node.js 20 이상과 `@clack-platform/cli` 0.1.1 이상이 필요합니다. 0.1.0을 쓰고 있다면 `npm i -g @clack-platform/cli@latest`로 올리세요.
+설치할 스킬과 에이전트는 대화형 화면에서 선택합니다. 프로젝트 설치가 기본이며, 전역 설치에는 `-g`를 사용합니다. 스킬 설치와 CLACK 계정 연결은 별도입니다. CLI 사용에는 Node.js 20 이상과 `@clack-platform/cli` 0.1.1 이상이 필요합니다. 0.1.0을 쓰고 있다면 `npm i -g @clack-platform/cli@latest`로 올리세요. `clack-skill-package`로 화면 언어별 표시 키(`display.description`·`tags_i18n`·`release_notes`)나 폼의 `x-clack-help-i18n`·`x-clack-placeholder-i18n`을 검사하려면 0.3.0 이상이 필요합니다.
 
 ```sh
 npm install -g @clack-platform/cli
