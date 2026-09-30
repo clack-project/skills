@@ -21,6 +21,9 @@
 - `version`: SemVer(`1.0.0`, `1.0.0-beta.1` 등)
 - `type`: `instruction` | `template` | `tool`
 - `display`: `title.ko`, `summary.ko`(각 1~200자, `en` 선택), `category`(`character_chat`|`quiz`|`worldbuilding`|`gallery`|`story`|`agent_tool`). `icon`·`screenshots`(최대 10)·`tags`(최대 10, 각 40자 이하)는 선택.
+  - 화면 언어별 표시(선택, **`clack >= 0.3.0`** 필요): `description`(`ko` 필수, `en` 선택, 각 1~1000자, 스킬 상세의 소개), `tags_i18n`(`{ "en": [...] }`, 각 1~40자·최대 10개·중복 금지, `tags`가 있어야 함), `release_notes`(`ko` 필수, `en` 선택, 각 1~1000자, 콘텐츠 소유자가 새 스킬 버전을 적용할 때 보는 변경 안내). 변경 안내는 `SKILL.md`가 아니라 `release_notes`에 적는다.
+  - 표시 폴백: 이름은 `title.en` → `title.ko`, 소개는 `description.en` → `summary.en` → 한국어 소개(`description.ko`, 없으면 `SKILL.md`의 `description`), 태그는 `tags_i18n.en` → `tags`, 변경 안내는 한국어 화면에서 `release_notes.ko`(없으면 `SKILL.md`의 `description`)를, 영어 화면에서 `release_notes.en`을 보이고 `en`이 없으면 표시하지 않는다. 스킬 목록 카드 응답에는 `description`·`release_notes`가 없고 상세 응답에만 있다.
+  - 제작 폼 스키마의 `x-clack-help-i18n`·`x-clack-placeholder-i18n`(필드별 안내·자리표시 다국어)도 `clack >= 0.3.0`에서 로컬 검사를 통과한다.
 - `authoring`: `modes`(`template`|`agent` 중 1개 이상), `surfaces`(`center`|`app`|`cli` 중 1개 이상). `form`·`ai_fill`·`references`·`tools`·`plugin`은 선택(유형에 따라 일부는 사실상 필수, 아래 참고).
 - `output`: `content_kind`(`html`|`gallery`|`slideshow`)가 필수. 나머지는 유형에 따라 다르다.
 

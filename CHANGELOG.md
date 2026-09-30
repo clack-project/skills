@@ -1,5 +1,10 @@
 # 변경 이력
 
+## 0.2.3 — 2026-09-30
+
+- `clack-skill-package`에 매니페스트 화면 언어별 표시 키를 안내했습니다: `display.description`(상세 소개)·`display.tags_i18n`(영어 태그)·`display.release_notes`(새 버전 변경 안내)와 화면 언어별 폴백, 목록 카드 응답에는 `description`·`release_notes`가 없다는 점, 변경 기록은 `SKILL.md`가 아니라 `release_notes`에 적는다는 규칙입니다. 이 키와 폼의 `x-clack-help-i18n`·`x-clack-placeholder-i18n`을 쓰는 패키지는 `clack >= 0.3.0`이 필요하다고 표기했습니다(다른 스킬의 요구 버전은 그대로).
+- 0.2.2 이후 병합된 개발 센터·콘텐츠 SDK 다국어 계약 안내(가이드 경로 `/ko/…` 전환, SDK 1.2.0 `clack.locale` 계약)도 이 버전에 포함됩니다.
+
 ## 0.2.2 — 2026-09-28
 
 - 공개 도그푸딩(S7b)에서 발견된 결함을 반영했습니다. 요구 CLI 버전을 `@clack-platform/cli` 0.1.1 이상으로 올렸습니다(`clack-mcp` 제외). 0.1.0 사용자는 `npm i -g @clack-platform/cli@latest`로 올리도록 안내합니다.
