@@ -68,3 +68,17 @@
 ```
 
 `validate`는 현재 폼 값이 스킬의 제작 폼 스키마와 맞는지 서버에서 확인한다. `package`는 완성한 세션을 실제 콘텐츠(또는 스킬 산출물)로 패키징하는 마지막 단계이므로, 사용자가 결과를 확인하고 승인한 뒤에만 호출한다.
+
+
+## 세션 완료·포기(CLI 0.3.1 이상)
+
+```sh
+clack authoring complete <세션-UUID> --json
+clack authoring abandon <세션-UUID> --yes --json
+```
+
+JSON 입력은 `{"action":"complete","session_id":"UUID"}` 또는 `{"action":"abandon","session_id":"UUID"}`이다. CLI 포기는 대상 세션과 편집 종료 효과를 확인한 뒤 실행하며, 이미 사용자가 승인한 같은 대상·행위에는 `--yes`를 쓴다. 로컬 MCP는 같은 action을 받고 포기는 `confirm:true`에서만 실행한다.
+
+PAT로는 폼(template) 세션만 만들고 끝낼 수 있다. 에디터·지침형 세션 생성·완료·포기는 `SESSION_REQUIRED`(403)이므로 크리에이터 센터로 안내한다. 타인·없는 세션은 `AUTHORING_NOT_FOUND`(404)다.
+
+`complete`는 현재 revision으로 `package`한 뒤에만 된다(`AUTHORING_NOT_PACKAGED` 409). 성공한 응답의 `data.status`가 `completed`인지 확인한다. 필요 없는 세션만 `abandon`해 `abandoned`를 확인한다. 포기는 세션 편집을 종료하고 기존 콘텐츠·버전을 삭제하거나 게시를 취소하지 않는다. 끝난 세션의 재호출은 `AUTHORING_SESSION_LOCKED`(409)이며, 응답 유실 시 `get`으로 상태부터 확인하고 변경 요청을 자동 재시도하지 않는다. 기존 사용자 세션을 상한 확보 목적으로 포기하지 않는다.
