@@ -12,7 +12,9 @@
 | 프로필 `runtime/.clack/profiles/*.yaml` | 파일당 16 KiB 이하 |
 | 예시 `examples/*.json` | 1~10개, 파일당 64 KiB 이하 |
 
-경로는 220자 이하, NFC 정규화, 공백·`\`·`%`·`?`·`#`·`:`·제어 문자 금지, `..`·숨김 파일(루트의 `.clack`만 예외) 금지, `scripts/`나 실행 확장자(`.sh`·`.py`·`.exe` 등)도 금지다. `SKILL.md`의 frontmatter는 유효한 YAML이어야 하고 `name`(디렉터리·매니페스트 이름과 동일)·`description`(1~1024자)이 필요하며 **`allowed-tools:` 키가 있으면 거부된다.**
+경로는 220자 이하, NFC 정규화, 공백·`\`·`%`·`?`·`#`·`:`·제어 문자 금지, `..`·숨김 파일(`runtime/.clack/`만 예외) 금지, `scripts/`나 실행 확장자(`.sh`·`.py`·`.exe` 등)도 금지다. `SKILL.md`의 frontmatter는 유효한 YAML이어야 하고 `name`(디렉터리·매니페스트 이름과 동일)·`description`(1~1024자)이 필요하며 **`allowed-tools:` 키가 있으면 거부된다.**
+
+압축 도구가 덧붙이는 부가 파일(ZIP 맨 위의 `__MACOSX` 폴더, 파일 이름 `.DS_Store`, `._`로 시작하는 파일 이름)은 검사에서 무시하고 파일 수에도 세지 않는다. 패키지 안쪽 폴더의 `__MACOSX`는 부가 파일로 보지 않는다. ZIP은 부가 파일을 뺀 모든 파일이 한 폴더 아래에 있고 그 폴더에 `SKILL.md`와 `clack.skill.json`이 있으면 바깥 폴더 한 겹을 자동으로 벗겨 검사한다. 절대 경로·`..`·제어 문자는 부가 파일 아래여도 거부하고, `.git`·`.env` 같은 그 밖의 숨김 파일은 계속 거부한다.
 
 ## `clack.skill.json` 필수 필드(모든 유형)
 
