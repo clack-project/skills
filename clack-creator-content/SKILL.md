@@ -5,7 +5,7 @@ description: 클랙 크리에이터 HTML/ZIP 작품(포켓 콘텐츠)을 등록�
 
 # 클랙 크리에이터 콘텐츠와 이미지 제작
 
-요구 버전: `clack >= 0.1.1`(제작 세션 완료·포기는 `clack >= 0.3.1`), Node.js 20 이상. 여기서 다루는 "콘텐츠"는 크리에이터가 만드는 HTML/ZIP 작품(포켓)이며, 일반 게시판·피드 글은 `clack-content` 스킬이 다룬다.
+요구 버전: `clack >= 0.1.1`(제작 세션 완료·포기는 `clack >= 0.3.1`), 썸네일 업로드·연결은 `clack >= 0.3.3`, Node.js 20 이상. 여기서 다루는 "콘텐츠"는 크리에이터가 만드는 HTML/ZIP 작품(포켓)이며, 일반 게시판·피드 글은 `clack-content` 스킬이 다룬다.
 
 테스트 앱(스테이징) 사용자라면 먼저 `clack config set env dev`를 한 번 실행한다. 이후 모든 명령이 이 환경을 따르므로 매 명령에 `--env dev`를 붙이지 않는다.
 
@@ -15,7 +15,7 @@ description: 클랙 크리에이터 HTML/ZIP 작품(포켓 콘텐츠)을 등록�
 |---|---|
 | `config` | 없음(로그인 불필요) |
 | `list`, `status`, `preview` | `creator-content:read` |
-| `create`, `upload`, `complete`, `withdraw`, 이미지 화보·캐릭터 자산 제작(`authoring`) | `creator-content:write` |
+| `create`, `update`, `thumbnail`, `info-version`, `upload`, `complete`, `withdraw`, 이미지 화보·캐릭터 자산 제작(`authoring`) | `creator-content:write` |
 | `submit` | `creator-content:write`와 `creator-content:publish` 모두 |
 | `publish`, `unpublish` | `creator-content:publish` |
 | `server-keys`, `shared` | `platform:read`/`platform:write`(`clack-platform-data` 스킬) |
@@ -48,6 +48,20 @@ clack content upload <콘텐츠-UUID> ./bundle.zip --header scroll_hide --color 
 `upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 헤더 표시를 지정하려면 `--header fixed|scroll_hide|translucent_scroll_hide|floating_close`와 `--color light|dark`를 함께 준다(생략하면 서버 기본값). 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
 
 ZIP에 `clack.content.json` 또는 `.clack/`가 있으면 업로드 전에 선언·경로·크기를 검사하고 표준 오류에 경고를 남긴다. 경고는 업로드를 막지 않으며 서버 심사 결과를 대신하지 않는다. 세부 규칙은 [references/packaging.md](references/packaging.md)를 읽는다.
+
+## 썸네일 업로드와 정보 수정
+
+```sh
+clack content thumbnail ./cover.png --content <콘텐츠-UUID> --json
+clack content update <콘텐츠-UUID> --thumbnail-file ./cover.webp --json
+clack content create --title '확정한 제목' --policy-version 2026-09-22 --thumbnail-file ./cover.png --json
+clack content update <콘텐츠-UUID> --thumbnail-id <썸네일-UUID> --json
+clack content update <콘텐츠-UUID> --thumbnail-id none --json
+```
+
+`thumbnail`은 로컬 이미지를 콘텐츠 전용 경로로 올려 작업 ID를 받는다. `--content`를 지정하면 연결까지 수행한다. `create`·`update`의 `--thumbnail-file`도 같은 흐름이며 `--thumbnail-id`와 함께 쓸 수 없다. 일반 `clack upload`의 CDN URL을 썸네일 ID로 전달하지 않는다. `content config`의 `thumbnail_upload_enabled`·`thumbnail_upload`로 지원 형식·용량·픽셀 제한을 확인한다. `--dry-run`은 설정 GET과 로컬 검사만 하며 쓰기는 하지 않는다.
+
+썸네일 필드를 생략하면 기존 값을 유지하고 `none`은 명시적으로 기본 이미지로 되돌린다. 업로드 성공 후 연결이 실패하면 JSON 오류의 `recovery.thumbnail_id`와 `retry_command`를 보관한다. `content status`로 반영 여부를 먼저 확인하고 ID로 연결을 재시도한다. 같은 파일을 다시 올리지 않는다. 정보 수정은 원본 HTML·ZIP을 재업로드하지 않으며, 미제출 초안은 서버가 동기화한다. 진행 중 심사는 취소될 수 있고 승인·게시 스냅샷은 유지된다. 별도 새 정보 버전과 공개 요청은 사용자가 요청한 범위에서만 기존 절차로 수행한다.
 
 ## 앱 확인·심사 제출
 
