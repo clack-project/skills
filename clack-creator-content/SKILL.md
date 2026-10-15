@@ -33,6 +33,10 @@ clack login --scopes creator-content:read,creator-content:write,creator-content:
 
 `content config`는 로그인 없이도 조회할 수 있어 기능 제공 여부를 먼저 확인하기 좋다. 로그인은 필요한 경우만 실행하고 앱 **마이페이지 → 계정 → 내 정보 수정하기 → 외부 도구 연결 → 코드로 승인**에서 사용자가 승인한다. 코드 안내와 승인 대기·이어받기(`--no-wait`, `--resume`)는 `clack-setup`의 '로그인 승인 대기'를 따른다. 수동 토큰은 `clack login --token`의 숨김 입력이나 안전한 `CLACK_TOKEN` 주입으로 전달한다.
 
+## 공개 자료 재사용
+
+다른 제작자가 허용한 공개 자료를 찾아 코드 콘텐츠나 캐릭터챗에 사용할 때는 [references/public-reuse.md](references/public-reuse.md)를 읽는다. 조회와 복사 권한은 별개이며, 해당 명령은 CLI 0.3.4 이상이 필요하다.
+
 ## 등록과 업로드
 
 ```sh
