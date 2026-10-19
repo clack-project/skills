@@ -49,7 +49,7 @@ clack content upload <콘텐츠-UUID> ./bundle.zip --color dark --json
 
 `create`는 `title`(1~120자), `description`(선택, 최대 2000자), `kind`(`html`|`gallery`|`slideshow`|`video`, 기본 `html`), `policy_version`이 필요하다. 현재 유효한 정책 버전은 `2026-09-22` 하나뿐이며, 값이 다르면 서버가 거부한다. 실제 정책 내용은 사용자에게 크리에이터 센터에서 확인하도록 안내하고, 사용자가 동의한 버전만 지정한다. 임의로 값을 지어내지 않는다.
 
-`upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 헤더는 인트로를 거쳐 열면 기본 숨김(세 손가락 탭으로 전환), 바로 열면 상시 표시한다. 기존 콘텐츠도 같은 기본값을 적용한다. 제작자는 `--color light|dark`로 색상을 정한다(생략하면 서버 기본값). `--header`의 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 저장 호환용이며 메뉴 종류를 바꾸지 않는다. 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
+`upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 헤더는 인트로 유무와 관계없이 기본 숨김이며 세 손가락 탭으로 전환한다. 인트로 없는 일러스트·글에는 본문과 제목 사이에 좋아요·댓글 수와 버튼을 추가로 표시한다. 기존 콘텐츠도 같은 기본값을 적용한다. 제작자는 `--color light|dark`로 색상을 정한다(생략하면 서버 기본값). `--header`의 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 저장 호환용이며 메뉴 종류를 바꾸지 않는다. 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
 
 ZIP에 `clack.content.json` 또는 `.clack/`가 있으면 업로드 전에 선언·경로·크기를 검사하고 표준 오류에 경고를 남긴다. 경고는 업로드를 막지 않으며 서버 심사 결과를 대신하지 않는다. 세부 규칙은 [references/packaging.md](references/packaging.md)를 읽는다.
 
@@ -69,7 +69,7 @@ clack content update <콘텐츠-UUID> --thumbnail-id none --json
 
 ## 헤더 표시
 
-CLI 0.3.5 이상에서 `content create` 또는 `content update <id>`의 `--header-visibility always|gesture|auto`로 지정한다. 사용자가 원하는 동작을 선택하고, 별도 요청이 없으면 기본값을 유지한다. `always`는 좋아요·댓글 헤더를 항상 표시하고 `gesture`는 세 손가락 탭으로 켜고 끈다. `auto`는 인트로 기준 기본값 복원이다. 수정에서 옵션 생략은 기존 값 유지다.
+CLI 0.3.6 이상에서 `content create` 또는 `content update <id>`의 `--header-visibility always|gesture|auto`로 지정한다. 사용자가 원하는 동작을 선택하고, 별도 요청이 없으면 기본값을 유지한다. `always`는 좋아요·댓글 헤더를 항상 표시하고 `gesture`는 세 손가락 탭으로 켜고 끈다. `auto`는 세 손가락 탭을 사용하는 공통 기본값 복원이다. 수정에서 옵션 생략은 기존 값 유지다.
 
 ```sh
 clack content update <콘텐츠-UUID> --header-visibility always --json
