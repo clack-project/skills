@@ -49,7 +49,7 @@ clack content upload <콘텐츠-UUID> ./bundle.zip --color dark --json
 
 `create`는 `title`(1~120자), `description`(선택, 최대 2000자), `kind`(`html`|`gallery`|`slideshow`|`video`, 기본 `html`), `policy_version`이 필요하다. 현재 유효한 정책 버전은 `2026-09-22` 하나뿐이며, 값이 다르면 서버가 거부한다. 실제 정책 내용은 사용자에게 크리에이터 센터에서 확인하도록 안내하고, 사용자가 동의한 버전만 지정한다. 임의로 값을 지어내지 않는다.
 
-`upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 공통 메뉴는 기본 숨김이며 세 손가락 탭으로 켜고 끈다. 제작자는 `--color light|dark`로 색상을 정한다(생략하면 서버 기본값). `--header`의 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 저장 호환용이며 메뉴 종류를 바꾸지 않는다. 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
+`upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 헤더는 인트로를 거쳐 열면 기본 숨김(세 손가락 탭으로 전환), 바로 열면 상시 표시한다. 기존 콘텐츠도 같은 기본값을 적용한다. 제작자는 `--color light|dark`로 색상을 정한다(생략하면 서버 기본값). `--header`의 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 저장 호환용이며 메뉴 종류를 바꾸지 않는다. 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
 
 ZIP에 `clack.content.json` 또는 `.clack/`가 있으면 업로드 전에 선언·경로·크기를 검사하고 표준 오류에 경고를 남긴다. 경고는 업로드를 막지 않으며 서버 심사 결과를 대신하지 않는다. 세부 규칙은 [references/packaging.md](references/packaging.md)를 읽는다.
 
@@ -67,6 +67,17 @@ clack content update <콘텐츠-UUID> --thumbnail-id none --json
 
 썸네일 필드를 생략하면 기존 값을 유지하고 `none`은 명시적으로 기본 이미지로 되돌린다. 업로드 성공 후 연결이 실패하면 JSON 오류의 `recovery.thumbnail_id`와 `retry_command`를 보관한다. `content status`로 반영 여부를 먼저 확인하고 ID로 연결을 재시도한다. 같은 파일을 다시 올리지 않는다. 정보 수정은 원본 HTML·ZIP을 재업로드하지 않으며, 미제출 초안은 서버가 동기화한다. 진행 중 심사는 취소될 수 있고 승인·게시 스냅샷은 유지된다. 별도 새 정보 버전과 공개 요청은 사용자가 요청한 범위에서만 기존 절차로 수행한다.
 
+## 헤더 표시
+
+CLI 0.3.5 이상에서 `content create` 또는 `content update <id>`의 `--header-visibility always|gesture|auto`로 지정한다. 사용자가 원하는 동작을 선택하고, 별도 요청이 없으면 기본값을 유지한다. `always`는 좋아요·댓글 헤더를 항상 표시하고 `gesture`는 세 손가락 탭으로 켜고 끈다. `auto`는 인트로 기준 기본값 복원이다. 수정에서 옵션 생략은 기존 값 유지다.
+
+```sh
+clack content update <콘텐츠-UUID> --header-visibility always --json
+clack content update <콘텐츠-UUID> --header-visibility auto --json
+```
+
+`content status`의 `header_visibility`로 저장값을 확인한다. MCP `update_creator_content`의 `changes.header_visibility`에도 `always`·`gesture`·`null`을 보낸다. **헤더 표시만 바꾸면** 다음 실행부터 적용하며 새 버전·앱 확인·재심사나 revision 변경이 없다. 다른 정보·파일을 함께 바꾸면 그 변경의 기존 검증 절차를 따른다. 커스텀 페이지와 예전 `--header` 호환 값은 별도다.
+
 ## 앱 확인·심사 제출
 
 작품은 반드시 **upload → preview → 앱에서 확인 완료 → submit** 순서로 진행한다.
@@ -79,7 +90,7 @@ clack content status <콘텐츠-UUID> --json
 ```
 
 1. `upload` 완료 응답에서 새 버전 ID를 확인한다.
-2. `preview`가 반환한 확인 링크를 사용자에게 전달하고, 작품 소유자와 같은 계정의 앱에서 끝까지 열어 실제 표시를 확인한 뒤 세 손가락으로 메뉴를 열고 ✓에서 확인 완료를 누르도록 안내한다. 이 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. 사용자가 확인을 마쳤다고 알려주기 전에는 `submit`하지 않는다. 표시 설정을 바꿔 올린 버전도 다시 확인해야 한다.
+2. `preview`가 반환한 확인 링크를 사용자에게 전달하고, 작품 소유자와 같은 계정의 앱에서 끝까지 열어 실제 표시를 확인한 뒤 헤더가 숨겨져 있다면 세 손가락으로 메뉴를 열고 ✓에서 확인 완료를 누르도록 안내한다. 이 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. 사용자가 확인을 마쳤다고 알려주기 전에는 `submit`하지 않는다. 표시 설정을 바꿔 올린 버전도 다시 확인해야 한다.
 3. `submit`은 대상 버전과 효과(심사를 통과하면 자동 공개, `publish_on_approval`)를 보여주고 사용자 확인을 받은 뒤 실행한다. 앱 확인 전에 제출하면 `PREVIEW_CONFIRMATION_REQUIRED`(409)가 나온다. 이때 제출을 반복하지 말고 2번으로 돌아간다.
 4. 제출 뒤에는 `content status`로 해당 버전의 심사 상태를 확인한다. 관리자 검토로 넘어간 버전은 결과가 늦을 수 있다.
 

@@ -38,7 +38,7 @@ clack page upload <페이지-UUID> ./index.html --color dark --json
 
 `create`의 `--target`은 `profile`(내 공개 홈) 또는 `space`(내가 소유한 세계관)다. `space`에는 `--space-id`가 필요하고 `profile`에는 지정하지 않는다. `--policy-version`은 사용자가 동의한 정책 버전이며 현재 유효한 값은 `2026-09-22` 하나뿐이다.
 
-`upload`는 최대 30 MiB의 HTML/ZIP과 표시 설정을 저장한다. 모든 콘텐츠·페이지의 공통 메뉴는 기본으로 숨겨지고 세 손가락 탭으로 켜고 끈다. 제작자는 메뉴 종류가 아닌 `--color`(`light`|`dark`, 기본 `light`)만 정한다. `--header`는 기존 저장 계약의 호환 인자이며 생략하면 `fixed`다. 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 모두 같은 메뉴로 표시된다. 파일과 표시 설정은 같은 버전에 고정되므로 색상만 바뀌어도 앱 확인·심사가 다시 필요하다. 전송 후 완료 처리까지 자동 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack page complete <페이지-UUID> <업로드-UUID>`로 재시도한다. 공통 메뉴·안전 영역 CSS는 [references/presentation.md](references/presentation.md)를 읽는다.
+`upload`는 최대 30 MiB의 HTML/ZIP과 표시 설정을 저장한다. 커스텀 페이지의 공통 메뉴는 기본으로 숨겨지고 세 손가락 탭으로 켜고 끈다. 제작자는 메뉴 종류가 아닌 `--color`(`light`|`dark`, 기본 `light`)만 정한다. `--header`는 기존 저장 계약의 호환 인자이며 생략하면 `fixed`다. 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 모두 같은 메뉴로 표시된다. 파일과 표시 설정은 같은 버전에 고정되므로 색상만 바뀌어도 앱 확인·심사가 다시 필요하다. 전송 후 완료 처리까지 자동 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack page complete <페이지-UUID> <업로드-UUID>`로 재시도한다. 공통 메뉴·안전 영역 CSS는 [references/presentation.md](references/presentation.md)를 읽는다.
 
 ## 앱 확인·심사·적용
 
