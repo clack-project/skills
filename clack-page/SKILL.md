@@ -33,12 +33,12 @@ clack page list --json
 clack page status <페이지-UUID> --json
 clack page create --target profile --policy-version 2026-09-22 --json
 clack page create --target space --space-id <세계관-UUID> --policy-version 2026-09-22 --json
-clack page upload <페이지-UUID> ./index.html --header translucent_scroll_hide --color dark --json
+clack page upload <페이지-UUID> ./index.html --color dark --json
 ```
 
 `create`의 `--target`은 `profile`(내 공개 홈) 또는 `space`(내가 소유한 세계관)다. `space`에는 `--space-id`가 필요하고 `profile`에는 지정하지 않는다. `--policy-version`은 사용자가 동의한 정책 버전이며 현재 유효한 값은 `2026-09-22` 하나뿐이다.
 
-`upload`는 최대 30 MiB의 HTML/ZIP을 올리며 헤더 설정을 함께 저장한다. `--header`(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`, 기본 `fixed`)와 `--color`(`light`|`dark`, 기본 `light`)를 생략하면 기본값이 적용된다. 파일과 헤더 설정은 같은 버전에 고정되므로 헤더만 바뀌어도 앱 확인·심사가 다시 필요하다. 전송 후 완료 처리까지 자동 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack page complete <페이지-UUID> <업로드-UUID>`로 재시도한다. 헤더·화면 표시 규칙과 안전 영역 CSS는 [references/presentation.md](references/presentation.md)를 읽는다.
+`upload`는 최대 30 MiB의 HTML/ZIP과 표시 설정을 저장한다. 모든 콘텐츠·페이지의 공통 메뉴는 기본으로 숨겨지고 세 손가락 탭으로 켜고 끈다. 제작자는 메뉴 종류가 아닌 `--color`(`light`|`dark`, 기본 `light`)만 정한다. `--header`는 기존 저장 계약의 호환 인자이며 생략하면 `fixed`다. 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 모두 같은 메뉴로 표시된다. 파일과 표시 설정은 같은 버전에 고정되므로 색상만 바뀌어도 앱 확인·심사가 다시 필요하다. 전송 후 완료 처리까지 자동 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack page complete <페이지-UUID> <업로드-UUID>`로 재시도한다. 공통 메뉴·안전 영역 CSS는 [references/presentation.md](references/presentation.md)를 읽는다.
 
 ## 앱 확인·심사·적용
 
@@ -52,7 +52,7 @@ clack page apply <페이지-UUID> <버전-UUID> --revision <status의 현재 수
 
 `preview`가 반환한 확인 링크는 반드시 페이지 소유자와 같은 계정의 앱에서 열어 실제 표시를 확인해야 하며, 이 확인 완료 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. `submit`은 앱에서 확인을 마친 버전만 심사에 제출하며, 승인만으로 자동 적용되지 않는다. 이 환경에서 자동 승인 조건(정적 HTML·CSS만 사용, 허용된 CSS 함수만 사용, 새로 판정할 이미지 8장 이하 등)을 모두 만족하면 관리자 개입 없이 바로 승인될 수 있지만 적용은 별도다.
 
-`apply`는 승인된 버전의 파일과 헤더 설정을 실제로 내보인다. `--revision`은 `status`로 확인한 **현재** 수정 번호이며, 충돌(`CUSTOM_PAGE_CONFLICT`)이 나면 `status`를 다시 읽어 최신 수정 번호로 재시도한다. 이전에 승인됐던 버전으로 되돌리려면 그 버전 ID로 같은 절차를 쓴다.
+`apply`는 승인된 버전의 파일과 표시 설정을 실제로 내보인다. `--revision`은 `status`로 확인한 **현재** 수정 번호이며, 충돌(`CUSTOM_PAGE_CONFLICT`)이 나면 `status`를 다시 읽어 최신 수정 번호로 재시도한다. 이전에 승인됐던 버전으로 되돌리려면 그 버전 ID로 같은 절차를 쓴다.
 
 ```sh
 clack page restore <페이지-UUID> <이전-승인-버전-UUID> --revision <status의 현재 수정 번호> --json
@@ -61,10 +61,12 @@ clack page disable <페이지-UUID> --revision <status의 현재 수정 번호> 
 
 `restore`는 내부적으로 `apply`와 같은 동작이며 과거에 승인된 버전 ID를 다시 지정하는 방식이다. `disable`은 기본 화면으로 되돌리며 업로드한 버전 자체는 삭제되지 않으므로 나중에 다시 `apply`할 수 있다.
 
-## 파일은 유지하고 헤더만 바꾸기
+## 파일은 유지하고 화면 색상 바꾸기
+
+`presentation`은 `--header`와 `--color`가 필수다. 색상만 바꿀 때도 원본 `header_mode`를 그대로 전달한다. 아래는 원본이 `fixed`인 예시이며 다른 값이면 그 값으로 바꾼다. 현재 CLI는 기존 다섯 값을 모두 받는다. 구버전 CLI가 원본 값을 받지 못하면 업데이트하거나 MCP/REST를 사용한다.
 
 ```sh
-clack page presentation <페이지-UUID> <기준-버전-UUID> --header scroll_hide --color light --json
+clack page presentation <페이지-UUID> <기준-버전-UUID> --header fixed --color dark --json
 # 응답 data.id가 새 버전 ID. 파일은 재사용하고 새 비공개 버전만 만든다.
 clack page preview <페이지-UUID> <새-버전-UUID> --json
 # 앱 확인 완료 후

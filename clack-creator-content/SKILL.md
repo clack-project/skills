@@ -44,12 +44,12 @@ clack content list --json
 clack content status <콘텐츠-UUID> --json
 clack content create --title '확정한 제목' --policy-version 2026-09-22 --json
 clack content upload <콘텐츠-UUID> ./index.html --json
-clack content upload <콘텐츠-UUID> ./bundle.zip --header scroll_hide --color dark --json
+clack content upload <콘텐츠-UUID> ./bundle.zip --color dark --json
 ```
 
 `create`는 `title`(1~120자), `description`(선택, 최대 2000자), `kind`(`html`|`gallery`|`slideshow`|`video`, 기본 `html`), `policy_version`이 필요하다. 현재 유효한 정책 버전은 `2026-09-22` 하나뿐이며, 값이 다르면 서버가 거부한다. 실제 정책 내용은 사용자에게 크리에이터 센터에서 확인하도록 안내하고, 사용자가 동의한 버전만 지정한다. 임의로 값을 지어내지 않는다.
 
-`upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 헤더 표시를 지정하려면 `--header fixed|scroll_hide|translucent_scroll_hide|floating_close`와 `--color light|dark`를 함께 준다(생략하면 서버 기본값). 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
+`upload`는 최대 30 MiB의 HTML 또는 ZIP을 체크섬과 함께 비공개 저장소로 보낸다. 공통 메뉴는 기본 숨김이며 세 손가락 탭으로 켜고 끈다. 제작자는 `--color light|dark`로 색상을 정한다(생략하면 서버 기본값). `--header`의 기존 다섯 값(`fixed`|`scroll_hide`|`translucent_scroll_hide`|`floating_close`|`floating_close_safe_area`)은 저장 호환용이며 메뉴 종류를 바꾸지 않는다. 전송 후 완료 처리까지 자동으로 진행되며, 완료 요청만 실패하면 오류에 표시된 `clack content complete <콘텐츠-UUID> <업로드-UUID>`로 같은 업로드를 재처리한다. `--dry-run`은 파일·입력 검사만 한다.
 
 ZIP에 `clack.content.json` 또는 `.clack/`가 있으면 업로드 전에 선언·경로·크기를 검사하고 표준 오류에 경고를 남긴다. 경고는 업로드를 막지 않으며 서버 심사 결과를 대신하지 않는다. 세부 규칙은 [references/packaging.md](references/packaging.md)를 읽는다.
 
@@ -79,7 +79,7 @@ clack content status <콘텐츠-UUID> --json
 ```
 
 1. `upload` 완료 응답에서 새 버전 ID를 확인한다.
-2. `preview`가 반환한 확인 링크를 사용자에게 전달하고, 작품 소유자와 같은 계정의 앱에서 끝까지 열어 실제 표시를 확인한 뒤 확인 완료를 누르도록 안내한다. 이 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. 사용자가 확인을 마쳤다고 알려주기 전에는 `submit`하지 않는다. 헤더 설정을 바꿔 올린 버전도 다시 확인해야 한다.
+2. `preview`가 반환한 확인 링크를 사용자에게 전달하고, 작품 소유자와 같은 계정의 앱에서 끝까지 열어 실제 표시를 확인한 뒤 세 손가락으로 메뉴를 열고 ✓에서 확인 완료를 누르도록 안내한다. 이 단계는 앱 전용이라 CLI·MCP가 대신할 수 없다. 사용자가 확인을 마쳤다고 알려주기 전에는 `submit`하지 않는다. 표시 설정을 바꿔 올린 버전도 다시 확인해야 한다.
 3. `submit`은 대상 버전과 효과(심사를 통과하면 자동 공개, `publish_on_approval`)를 보여주고 사용자 확인을 받은 뒤 실행한다. 앱 확인 전에 제출하면 `PREVIEW_CONFIRMATION_REQUIRED`(409)가 나온다. 이때 제출을 반복하지 말고 2번으로 돌아간다.
 4. 제출 뒤에는 `content status`로 해당 버전의 심사 상태를 확인한다. 관리자 검토로 넘어간 버전은 결과가 늦을 수 있다.
 
@@ -121,7 +121,7 @@ clack content unpublish <콘텐츠-UUID> --json
 | 401 / `PAT_EXPIRED`, `PAT_REVOKED` | 앱에서 연결 확인 후 다시 로그인 |
 | `SCOPE_DENIED`, `PAT_FORBIDDEN` | `creator-content:read/write/publish` 중 필요한 것만 확인 |
 | `SERVER_KEY_CENTER_ONLY` | 서버 키 발급·회전은 크리에이터 센터 전용, CLI로 시도하지 않기 |
-| `PREVIEW_CONFIRMATION_REQUIRED` | 사용자가 아직 앱에서 이 버전(또는 바뀐 헤더 설정)을 확인하지 않음. 제출을 반복하지 말고 `preview` 링크로 앱 확인 완료를 요청한 뒤 다시 제출 |
+| `PREVIEW_CONFIRMATION_REQUIRED` | 사용자가 아직 앱에서 이 버전(또는 바뀐 표시 설정)을 확인하지 않음. 제출을 반복하지 말고 `preview` 링크로 앱 확인 완료를 요청한 뒤 다시 제출 |
 | `CONTENT_METADATA_CHANGED` | 제목·설명·종류·썸네일이 바뀜, 새 버전을 업로드하고 앱 확인부터 다시 |
 | `CONTENT_PLATFORM_DISABLED`, `CONTENT_REVIEW_NOT_READY`, `CONTENT_SERVING_NOT_READY` | 이 환경에서 해당 기능이 꺼져 있음. `content config`의 플래그를 확인하고 반복 호출하지 않기 |
 | `CONTENT_UPLOAD_FAILED`, `INVALID_UPLOAD_RESPONSE` | 새 업로드를 시작(재사용 안 함), 반복 실패 시 파일·네트워크 확인 |

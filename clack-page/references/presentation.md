@@ -1,35 +1,25 @@
-# 헤더·화면 표시와 페이지 HTML 규칙
+# 공통 메뉴·화면 표시와 페이지 HTML 규칙
 
-## 헤더 값
+## 공통 메뉴와 호환 값
 
-| 값 | 표시 방식 |
-|---|---|
-| `fixed` | 기본 고정 헤더 |
-| `scroll_hide` | 아래로 스크롤하면 숨고 위로 스크롤하면 나타나는 헤더 |
-| `translucent_scroll_hide` | 본문이 비치는 반투명 헤더와 스크롤 숨김 |
-| `floating_close` | 상단 바 없이 닫기 버튼만 표시 |
+모든 콘텐츠·미리보기·페이지는 같은 메뉴를 사용한다. 메뉴는 기본으로 숨겨지며 세 손가락 탭으로 표시·숨김을 전환한다. 스크롤이나 canvas 제스처는 메뉴 상태를 바꾸지 않는다. 스크린 리더 사용자를 위한 별도 메뉴 전환 버튼도 있다. 앱 확인은 메뉴를 연 뒤 위쪽 ✓를 눌러 확인 안내와 확인 버튼을 펼친다.
 
-색상은 `light` 또는 `dark`다. 닫기 버튼은 앱이 제공하며 헤더를 숨겨도 사용할 수 있다. 새 공개 홈·세계관 꾸미기는 `floating_close`(전체 화면, 닫기 버튼만)가 기본 권장이다.
+제작자는 `light`·`dark` 색상만 정한다. 저장된 `header_mode`의 `fixed`, `scroll_hide`, `translucent_scroll_hide`, `floating_close`, `floating_close_safe_area`는 기존 데이터·통신 호환용이며 모두 같은 메뉴로 표시된다. 새 업로드의 `--header`는 생략할 수 있고 기본값은 `fixed`다. `page presentation`은 현재 `--header`가 필수이므로 원본 값을 그대로 전달한다. 현재 CLI는 다섯 값을 모두 받으며, 구버전이 원본 값을 받지 못하면 업데이트하거나 MCP/REST를 사용한다.
 
 ## HTML을 직접 작성·수정할 때
 
-- 배경·대표 이미지는 화면 가장자리까지 채우고, 제목·링크·입력 같은 상호작용 요소에만 안전 영역과 닫기 버튼을 피할 여백을 둔다. `body`·`main` 전체에 헤더 높이만큼 빈 공간을 만들면 전체 화면의 이점이 사라진다.
-- 앱이 제공하는 CSS 변수: 안전 영역 `--clack-safe-top/bottom/left/right`, 화면 높이 `--clack-viewport-height`. `--clack-header-height`는 기존 호환용으로 고정 헤더에서는 0이다(닫기 버튼 모드의 배경 전체를 밀어내는 용도로 쓰지 않는다). 안전 영역은 웹 표준 `env(safe-area-inset-*)` 대신 `var(--clack-safe-top)` 등을 쓴다. `env()`는 아래 자동 승인 대상 CSS 함수 목록에 없어 자동 승인에서 제외되고(`CSS_FUNCTION_REQUIRES_REVIEW`) 관리자 검토로 넘어간다. `var()`의 대체값에도 `env()`를 넣지 않는다.
+호스트가 본문을 기기의 안전 영역 안쪽에 놓는다. `--clack-safe-top/bottom/left/right`와 `--clack-header-height`는 모두 `0px`다. `--clack-viewport-height`는 현재 HTML 뷰포트 높이이며 회전·키보드에 따라 갱신한다. 메뉴를 열어도 본문 크기·위치가 바뀌지 않는다. 헤더·닫기 버튼용 빈 띠나 56px·72px 회피 여백은 예약하지 않는다. 제목·링크·입력의 일반 여백은 콘텐츠 디자인에 맞게 정한다.
+
+안전 영역을 중복 적용하는 `env(safe-area-inset-*)`는 쓰지 않는다. `env()`는 아래 자동 승인 대상 CSS 함수 목록에도 없어 관리자 검토로 넘어간다(`CSS_FUNCTION_REQUIRES_REVIEW`). `var()`의 대체값에도 `env()`를 넣지 않는다.
 
 ```css
 html, body { margin: 0; }
 .hero { position: relative; min-height: var(--clack-viewport-height, 100dvh); }
 .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.hero-copy {
-  position: relative;
-  padding-top: calc(var(--clack-safe-top, 0px) + 72px);
-  padding-bottom: calc(var(--clack-safe-bottom, 0px) + 24px);
-  padding-left: calc(var(--clack-safe-left, 0px) + 16px);
-  padding-right: calc(var(--clack-safe-right, 0px) + 16px);
-}
+.hero-copy { position: relative; padding: 24px 16px; }
 ```
 
-닫기 버튼은 상단 왼쪽 안전 영역에서 오른쪽으로 약 72px, 아래로 약 56px 범위를 차지하므로 이 범위에는 링크·입력을 두지 않는다. 문서 전체 스크롤이 기본이며, 내부 요소를 주 스크롤 영역으로 쓴다면 그 요소 하나에 `data-clack-scroll-root`를 붙인다. canvas나 자체 가상 스크롤처럼 실제 스크롤 위치가 없는 화면은 앱에서 직접 확인한 뒤 헤더 모드를 정한다.
+문서 스크롤·내부 스크롤·canvas 모두 공통 메뉴를 사용한다. 기존 `data-clack-scroll-root`나 스크롤 메시지는 메뉴 전환을 제어하지 않는다. 큰 글꼴·스크린 리더·회전·키보드를 포함해 앱에서 콘텐츠 표시를 확인한다.
 
 앱 안의 다른 화면으로 이동할 때는 `<a href>` 대신 아래 메시지를 쓴다. `target`은 `profile`·`space`·`content`이고 ID는 문자열로 보낸다. 실제 접근 권한은 앱·서버가 확인한다.
 
