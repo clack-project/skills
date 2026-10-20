@@ -142,3 +142,12 @@ clack content unpublish <콘텐츠-UUID> --json
 | 429 | `retry_after`초 이상 대기 |
 | `USER_API_DISABLED`, `USER_API_WRITE_DISABLED`, 8 / `USER_API_UNAVAILABLE` | 연결한 서버에 기능이 없거나 중단됨, `clack-setup` 절차로 환경 확인 |
 | `OUTCOME_UNKNOWN`, 네트워크·5xx | 반영 여부 확인 전 자동 재실행 금지 |
+
+### 한영 콘텐츠와 ZIP 복원 (CLI 0.3.7 이상)
+
+- `content update --target-langs ko,en`은 본문 지원 언어다. 목록 우선순위만 바꾸며 번역을 만들거나 다른 언어 접근을 차단하지 않는다.
+- `--localized-metadata`의 언어별 항목은 `title`, `description`, `tags`, `thumbnail_id`, 표시용 `source_work`, `source_credit`를 받는다. 전체 교체이므로 기존 항목을 먼저 조회하고 보존한다. `--expected-revision`은 동시 변경을 거절한다.
+- `content thumbnail <file> --content <id> --lang en`으로 추가 언어 썸네일을 올린다. 생성은 `content thumbnail-generate` → `content thumbnail-status` → 해당 언어 `thumbnail_id` 연결 순서다. 비용·동의는 현재 서버 응답을 따른다.
+- MCP는 `upload_creator_thumbnail`(base64 이미지), `generate_creator_thumbnail`, `get_creator_thumbnail`, `update_creator_intro`, `get_creator_language_stats`를 제공한다. 원격 MCP가 로컬 파일을 읽거나 저장했다고 말하지 않는다.
+- `content export <id> <version-id> --out <new-file.zip>` 또는 MCP `export_creator_content`로 본인 선택 버전의 코드·자산·프로필을 복원한다. 공개 이미지 재사용 `content download`와 구분한다. 30 MiB 이하이며 비공개 설정 필요 버전은 거절한다. URL은 5분 유효이고 비공개로 다룬다.
+- 콘텐츠는 `clack.locale.content_language ?? clack.locale.language`로 본문 언어를 선택한다. `output_language`는 단발 AI·그림 결과 언어이며 프로필 안전 규칙과 JSON 키를 바꾸지 않는다. 미리보기의 `lang=ko|en`은 소유자 화면 안에서만 적용한다.
